@@ -39,13 +39,15 @@ body{
 .menu > li > a{
   width:100%;
     font-size:20px;
-  opacity: 0.8;
+  opacity: 1;
   padding:20px;
   text-transform:uppercase;
   text-shadow: 2px 2px 5px #000;
 }
 
-
+.menu > li > a > img{
+  width:150px;
+}
 
 .menu > li > a:hover{
   text-shadow: 2px 2px 5px #eee;
@@ -963,3 +965,4 @@ padding: 5vw;
   font-size:25px;
 }
 }
+
