@@ -913,14 +913,14 @@ font-family: 'Bebas Neue', sans-serif;
 }
 
   .float-img .img1{
-    left:55%;
+    left:50%;
     top:60%;
     width:40vw;
   }
 
   .float-img .img2 {
-    left:60%;
-    top:15%;
+    left:50%;
+    top:5%;
     width:40vw;
   }
 
@@ -965,4 +965,3 @@ padding: 5vw;
   font-size:25px;
 }
 }
-
