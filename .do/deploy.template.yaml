@@ -1,7 +1,0 @@
-spec:
- name: personal-website
- static_sites:
- - git:
-     branch: main
-     repo_clone_url: https://github.com/PROTechThor/personal-website.git
-   name: personal-website
