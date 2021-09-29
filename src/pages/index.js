@@ -22,7 +22,7 @@ const IndexPage = props => {
   return (
     <div className="layout-container indexpage">
       <SEO
-        title="All posts"
+        title="Home"
         keywords={[`blog`, `gatsby`, `javascript`, `react`]}
       />
       <ToggleMenu />
@@ -448,7 +448,7 @@ const IndexPage = props => {
           <div className="social">
             <div className="social-item">
               <div className="social-top">
-                <a href="" className="social-name">
+                <a href="https://github.com/enjeck" className="social-name">
                   {' '}
                   GitHub{' '}
                 </a>
@@ -470,7 +470,7 @@ const IndexPage = props => {
             </div>
             <div className="social-item">
               <div className="social-top">
-                <a href="" className="social-name">
+                <a href="https://www.linkedin.com/in/c1e0/" className="social-name">
                   {' '}
                   Linkedin{' '}
                 </a>
@@ -492,7 +492,7 @@ const IndexPage = props => {
             </div>
             <div className="social-item">
               <div className="social-top">
-                <a href="" className="social-name">
+                <a href="mailto:enjeckc1e0@gmail.com" className="social-name">
                   {' '}
                   Email{' '}
                 </a>
