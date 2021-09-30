@@ -44,7 +44,7 @@ const ToggleMenu = () => {
       className="toggle-menu"
     >
         <div className="menu-options">
-        <a href="/" className="logo"><img style={{ marginBottom:"0"}} src={logo}/></a>
+        <a href="/" className="logo"><img style={{ marginBottom:"0"}} src={logo} alt=""/></a>
       <div
       className={
         isToggleActive

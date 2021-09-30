@@ -14,7 +14,7 @@ class NotFoundPage extends React.Component {
         <p>Sorry, the page you are looking for does not exist.</p>
         <div className="buttons-404">
 
-        <a href="/" target="_blank"
+        <a href="/"
                            className="btn-work btn-blog">
                            <span className="btn-work__text">Back to home </span> 
                            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 
@@ -24,7 +24,7 @@ class NotFoundPage extends React.Component {
                               </polygon>
                            </svg>
                         </a>
-        <a href="/blog" target="_blank"
+        <a href="/blog"
                            className="btn-work btn-blog">
                            <span className="btn-work__text">Visit blog</span> 
                            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 

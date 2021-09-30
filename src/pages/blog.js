@@ -11,7 +11,7 @@ class BlogIndex extends React.Component {
     const posts = data.allMdx.edges
 
     return (
-      <Layout location={this.props.location} /*title={siteTitle}*/>
+      <Layout location={this.props.location} title={siteTitle}>
         <SEO
           title="All blog posts"
           keywords={[`blog`, `gatsby`, `javascript`, `react`]}

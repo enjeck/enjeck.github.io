@@ -1,13 +1,15 @@
 import React from 'react'
-import { Link } from 'gatsby'
 
 class Footer extends React.Component {
   render() {
     return (
       <div >
         <footer>
-          © {new Date().getFullYear()} Enjeck Cleopatra
+          <span>
+          <div className="copyright"><span>©</span> {new Date().getFullYear()} Enjeck Cleopatra. All Rights Reserved.</div>
+        </span>
         </footer>
+
       </div>
     )
   }

@@ -98,7 +98,7 @@ const IndexPage = props => {
                 <a
                   href="/"
                   target="_blank"
-                  rel="noopener"
+                  rel="noreferrer"
                   className="btn-work"
                 >
                   <span className="btn-work__text">Visit site</span>
@@ -119,10 +119,10 @@ const IndexPage = props => {
               </div>
               <div className="work-medias">
                 <div className="work-medias__img">
-                  <img src={personal1} alt="" />
+                  <img src={personal2} alt="" />
                 </div>
                 <div className="work-medias__img">
-                  <img src={personal2} alt="" />
+                  <img src={personal1} alt="" />
                 </div>
               </div>
             </div>
@@ -145,7 +145,7 @@ const IndexPage = props => {
                 <a
                   href="https://github.com/enjeck/TutCode"
                   target="_blank"
-                  rel="noopener"
+                  rel="noreferrer"
                   className="btn-work"
                 >
                   <span className="btn-work__text">Visit site</span>
@@ -193,7 +193,7 @@ const IndexPage = props => {
                 <a
                   href="https://github.com/enjeck/libre-logos"
                   target="_blank"
-                  rel="noopener"
+                  rel="noreferrer"
                   className="btn-work"
                 >
                   <span className="btn-work__text">Visit site</span>
@@ -242,7 +242,7 @@ const IndexPage = props => {
                 <a
                   href="https://github.com/enjeck/CrazyPassword"
                   target="_blank"
-                  rel="noopener"
+                  rel="noreferrer"
                   className="btn-work"
                 >
                   <span className="btn-work__text">Visit site</span>
@@ -282,7 +282,7 @@ const IndexPage = props => {
                 <a
                   href="https://github.com/enjeck/jpg2svg"
                   target="_blank"
-                  rel="noopener"
+                  rel="noreferrer"
                   className="btn-work"
                 >
                   <span className="btn-work__text">Visit site</span>
@@ -330,7 +330,7 @@ const IndexPage = props => {
                 <a
                   href="https://github.com/enjeck/Geo-Guess"
                   target="_blank"
-                  rel="noopener"
+                  rel="noreferrer"
                   className="btn-work"
                 >
                   <span className="btn-work__text">Visit site</span>
@@ -371,7 +371,7 @@ const IndexPage = props => {
                 <a
                   href="https://github.com/enjeck/Blobby"
                   target="_blank"
-                  rel="noopener"
+                  rel="noreferrer"
                   className="btn-work"
                 >
                   <span className="btn-work__text">Visit site</span>
@@ -420,7 +420,7 @@ const IndexPage = props => {
                 <a
                   href="https://github.com/enjeck/Google-Sheet-to-website"
                   target="_blank"
-                  rel="noopener"
+                  rel="noreferrer"
                   className="btn-work"
                 >
                   <span className="btn-work__text">Visit site</span>
@@ -546,7 +546,7 @@ const IndexPage = props => {
               )
             })}
           </div>
-          <a href="/blog" target="_blank" className="btn-work btn-blog">
+          <a href="/blog"className="btn-work btn-blog">
             <span className="btn-work__text">Read more articles</span>
             <svg
               version="1.1"

@@ -107,14 +107,24 @@
 
 
 .logo {
-    width: 70px;
+    width: 60px;
     height:auto;
 }
 
-    .toggle-menu-item {
-        font-size: 5rem;
-        -webkit-text-stroke-width: 0.8px;
+.hamburger-icon {
+    width: 35px;
+    height: 25px;
+}
+
+.hamburger-icon span {
+    height: 6px;
+  }
+
+.toggle-menu-item {
+    font-size: 4rem;
+    -webkit-text-stroke-width: 1px;
       letter-spacing: 0.3rem;
-      line-height: 6rem;
+      line-height: 4rem;
+      text-shadow: 0.4vw 0.4vw 0px hsl(56, 99%, 55%);
     }
   }

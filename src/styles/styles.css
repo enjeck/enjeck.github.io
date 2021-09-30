@@ -19,23 +19,25 @@
 
 html{
   scroll-behavior: smooth;
-  width:100vw;
+  width:100%;
   overflow-x:hidden;
   position: relative;
 }
 
 body{
-  width:100vw;
+  width:100%;
   padding:0;
   margin:0;
   overflow-x:hidden;
   position: relative;
   scroll-behavior: smooth;
   background-color:#F6F2EC;
+  height: auto !important;
+  overflow:auto !important;
 }
 
 main {
-  width:100vw;
+  width:100%;
   overflow-x:hidden;
   padding-top: 15vh;
   min-height: 100vh;
@@ -51,12 +53,12 @@ a {
  }
 
 .layout-container {
-  width: 100vw;
+  width: 100%;
   height: 100%;
   margin:0;
   padding: 0;
   background: rgba(255,255,255,0.5);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .indexpage{
@@ -64,7 +66,7 @@ a {
 }
 
 #pages{
- width: 100vw;
+ width: 100%;
 }
 
 /* First page / Introduction */
@@ -147,7 +149,7 @@ a {
 .scroll-down {
 	position: absolute;
 	right: 5%;
-	bottom: 15%;
+	bottom: 5%;
 	display: flex;
 	-webkit-box-orient: vertical;
 	-webkit-box-direction: normal;
@@ -264,6 +266,8 @@ a {
   word-spacing: 10px;
   font-size: 20px;
   color: var(--light-black);
+  padding-top: 20px;
+  margin-bottom: 0;
 }
 
 .work-separator {
@@ -309,7 +313,7 @@ a {
   -webkit-text-stroke-color: #27282C;
    font-family: 'Anton', sans-serif;
 	/*font-family: var(--font-headings);*/
-	font-size: 12.5rem;
+	font-size: 11.5rem;
 	text-transform: uppercase;
 	color: #27282C;
 	margin-left: -1rem;
@@ -504,12 +508,20 @@ a {
 /* Footer */
 
 footer {
-  width: 100vw;
+  width: 100%;
   text-align: center;
-  padding: 30px;
+  padding: 20px;
   background: var(--light-black);
   color: #eee;
   margin-top: 30px;
+}
+
+footer .copyright {
+  font-size: 14px;
+  color: #ddd;
+  margin: 0px;
+padding: 0px;
+border: 0px none;
 }
 
 /* Responsive */
@@ -540,6 +552,7 @@ footer {
 }
 
 @media screen and (max-width: 800px) {
+
   .introduction{
     margin: auto;
   }
@@ -557,13 +570,29 @@ footer {
   .scroll-down {
     font-size: 15px;
   }
+
+  .skills, .langs {
+    font-size: 1.2rem;
+}
+
   .work-col__name {
-    font-size: 7.5rem;
+    font-size: 6.5rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 1.1;
+    margin: 0 2px;
   }
   
   .work-col__text {
     width: 70%;
     font-size: 1.4rem;
+  }
+
+  .technologies {
+    padding-top: 55px;
+    word-spacing: 0;
+    font-size: 1.0rem;
+    margin-bottom: 0;
   }
 
   .contact-page{
@@ -591,18 +620,18 @@ footer {
 
 @media screen and (max-width: 500px) {
 
+  .introduction {
+    max-width: 80vw;
+  }
+
   .introduction h2 {
     -webkit-text-stroke-width: 1px;
-    font-size: 10.0vw;
-    line-height: 11.3vw;
+    font-size: 11.0vw;
+    line-height: 13.3vw;
   }
 
   .introduction h2 span, .flip-text > div > div {
     transition: 1s;
-  }
-
-  .skills, .langs {
-    font-size: 1.6rem;
   }
 
   .second-page {
@@ -610,17 +639,11 @@ footer {
   }
 
   .work-col__name {
-    font-size: 5.5rem;
+    font-size: 4.5rem;
   }
   
   .work-col__text {
     width: 90%;
-    font-size: 1.24rem;
-  }
-
-  .technologies{
-    line-height: 50px;
-    margin-bottom: 0;
     font-size: 1.24rem;
   }
 
@@ -635,4 +658,5 @@ footer {
   .blog-page {
     padding-top: 8rem;
   }
+
 }
