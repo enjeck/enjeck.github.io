@@ -47,7 +47,7 @@
     "gh-pages": "^3.2.3",
     "prettier": "^1.14.2"
   },
-  "homepage": "protechthor.github.io",
+  "homepage": "enjeck.github.io",
   "keywords": [
     "gatsby",
     "portfolio",
@@ -56,7 +56,7 @@
   "main": "n/a",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PROTechThor/PROTechThor.github.io.git"
+    "url": "git+https://github.com/enjeck/enjeck.github.io.git"
   },
   "scripts": {
     "dev": "gatsby develop",
