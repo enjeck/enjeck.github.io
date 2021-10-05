@@ -510,7 +510,7 @@ const IndexPage = props => {
                   <polygon points="345.606,107.5 324.394,128.713 418.787,223.107 0,223.107 0,253.107 418.787,253.107 324.394,347.5 345.606,368.713 476.213,238.106 "></polygon>
                 </svg>
               </div>
-              <div className="social-more">Write something nice to me</div>
+              <div className="social-more">Chat with me</div>
             </div>
           </div>
         </div>
