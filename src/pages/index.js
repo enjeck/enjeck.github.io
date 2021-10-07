@@ -2,6 +2,8 @@ import * as React from 'react'
 import SEO from '../components/seo'
 import '../styles/styles.css'
 import { Link, graphql } from 'gatsby'
+import gfolio1 from './../../content/assets/project-images/gfolio1.png'
+import gfolio2 from './../../content/assets/project-images/gfolio2.png'
 import tutcode1 from './../../content/assets/project-images/tutcode1.png'
 import tutcode2 from './../../content/assets/project-images/tutcode2.png'
 import personal1 from './../../content/assets/project-images/personal-site1.png'
@@ -128,6 +130,7 @@ const IndexPage = props => {
             </div>
           </div>
 
+
           <div className="work-container">
             <div className="work-separator">
               <span className="work-separator-year">2021</span>
@@ -135,15 +138,13 @@ const IndexPage = props => {
             </div>
             <div className="work">
               <div data-scroll="" data-scroll-speed="1" className="work-col">
-                <h2 className="work-col__name">TUTCODE</h2>
-                <p className="technologies"> HTML • CSS • JavaScript</p>
+                <h2 className="work-col__name">gfolio</h2>
+                <p className="technologies"> HTML • CSS • JavaScript (ReactJS)</p>
                 <p className="work-col__text">
-                  A website where people can simultaneously code and watch/read
-                  tutorials. It's a more convenient way to learn and practice
-                  how to code (with HTML, CSS and JavaScript) on the same page.
+                  A Google Search themed portfolio website.
                 </p>
                 <a
-                  href="https://github.com/enjeck/TutCode"
+                  href="https://github.com/enjeck/gfolio"
                   target="_blank"
                   rel="noreferrer"
                   className="btn-work"
@@ -166,14 +167,15 @@ const IndexPage = props => {
               </div>
               <div className="work-medias">
                 <div className="work-medias__img">
-                  <img src={tutcode1} alt="" />
+                  <img src={gfolio2} alt="" />
                 </div>
                 <div className="work-medias__img">
-                  <img src={tutcode2} alt="" />
+                  <img src={gfolio1} alt="" />
                 </div>
               </div>
             </div>
           </div>
+
 
           <div className="work-container">
             <div className="work-separator">
@@ -218,6 +220,54 @@ const IndexPage = props => {
                 </div>
                 <div className="work-medias__img">
                   <img src={ll1} alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div className="work-container">
+            <div className="work-separator">
+              <span className="work-separator-year">2021</span>
+              <span className="work-separator-line"></span>
+            </div>
+            <div className="work">
+              <div data-scroll="" data-scroll-speed="1" className="work-col">
+                <h2 className="work-col__name">TUTCODE</h2>
+                <p className="technologies"> HTML • CSS • JavaScript</p>
+                <p className="work-col__text">
+                  A website where people can simultaneously code and watch/read
+                  tutorials. It's a more convenient way to learn and practice
+                  how to code (with HTML, CSS and JavaScript) on the same page.
+                </p>
+                <a
+                  href="https://github.com/enjeck/TutCode"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-work"
+                >
+                  <span className="btn-work__text">Visit site</span>
+                  <svg
+                    version="1.1"
+                    id="Layer_1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                    x="0px"
+                    y="0px"
+                    viewBox="0 0 476.213 476.213"
+                    xmlSpace="preserve"
+                    className="btn-work__icon"
+                  >
+                    <polygon points="345.606,107.5 324.394,128.713 418.787,223.107 0,223.107 0,253.107 418.787,253.107 324.394,347.5 345.606,368.713 476.213,238.106 "></polygon>
+                  </svg>
+                </a>
+              </div>
+              <div className="work-medias">
+                <div className="work-medias__img">
+                  <img src={tutcode1} alt="" />
+                </div>
+                <div className="work-medias__img">
+                  <img src={tutcode2} alt="" />
                 </div>
               </div>
             </div>
