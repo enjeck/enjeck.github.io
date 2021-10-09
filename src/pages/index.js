@@ -139,7 +139,7 @@ const IndexPage = props => {
             <div className="work">
               <div data-scroll="" data-scroll-speed="1" className="work-col">
                 <h2 className="work-col__name">gfolio</h2>
-                <p className="technologies"> HTML • CSS • JavaScript (ReactJS)</p>
+                <p className="technologies"> HTML • CSS • JavaScript (React)</p>
                 <p className="work-col__text">
                   A Google Search themed portfolio website.
                 </p>
@@ -497,11 +497,11 @@ const IndexPage = props => {
           <p className="page-desc"> Want to follow my work or talk to me? </p>
           <div className="social">
             <div className="social-item">
-              <div className="social-top">
-                <a href="https://github.com/enjeck" className="social-name">
+              <a href="https://github.com/enjeck" className="social-top">
+                <span className="social-name">
                   {' '}
                   GitHub{' '}
-                </a>
+                </span>
                 <svg
                   version="1.1"
                   id="Layer_1"
@@ -515,15 +515,15 @@ const IndexPage = props => {
                 >
                   <polygon points="345.606,107.5 324.394,128.713 418.787,223.107 0,223.107 0,253.107 418.787,253.107 324.394,347.5 345.606,368.713 476.213,238.106 "></polygon>
                 </svg>
-              </div>
+              </a>
               <div className="social-more">Explore my projects and code</div>
             </div>
             <div className="social-item">
-              <div className="social-top">
-                <a href="https://www.linkedin.com/in/c1e0/" className="social-name">
+              <a href="https://www.linkedin.com/in/c1e0/" className="social-top">
+                <span className="social-name">
                   {' '}
                   Linkedin{' '}
-                </a>
+                </span>
                 <svg
                   version="1.1"
                   id="Layer_1"
@@ -537,15 +537,15 @@ const IndexPage = props => {
                 >
                   <polygon points="345.606,107.5 324.394,128.713 418.787,223.107 0,223.107 0,253.107 418.787,253.107 324.394,347.5 345.606,368.713 476.213,238.106 "></polygon>
                 </svg>
-              </div>
+              </a>
               <div className="social-more">Connect with me</div>
             </div>
             <div className="social-item">
-              <div className="social-top">
-                <a href="mailto:enjeckc1e0@gmail.com" className="social-name">
+              <a  className="social-top">
+                <span className="social-name">
                   {' '}
                   Email{' '}
-                </a>
+                </span>
                 <svg
                   version="1.1"
                   id="Layer_1"
@@ -559,7 +559,7 @@ const IndexPage = props => {
                 >
                   <polygon points="345.606,107.5 324.394,128.713 418.787,223.107 0,223.107 0,253.107 418.787,253.107 324.394,347.5 345.606,368.713 476.213,238.106 "></polygon>
                 </svg>
-              </div>
+              </a>
               <div className="social-more">Chat with me</div>
             </div>
           </div>
