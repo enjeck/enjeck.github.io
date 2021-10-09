@@ -541,7 +541,7 @@ const IndexPage = props => {
               <div className="social-more">Connect with me</div>
             </div>
             <div className="social-item">
-              <a  className="social-top">
+              <a href="mailto:enjeckc1e0@gmail.com" className="social-top">
                 <span className="social-name">
                   {' '}
                   Email{' '}
