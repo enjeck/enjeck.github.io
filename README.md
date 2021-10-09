@@ -1,3 +1,3 @@
 My personal website
 
-Website: https://enjeck.com/enjeck.com
+Website: https://enjeck.com/
