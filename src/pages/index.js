@@ -68,7 +68,7 @@ const IndexPage = props => {
             <span>
               Front end Web development • 3d design • Graphic design • Community
               management • Open source • Technical support • Technical Writing •
-              Figma • Pricacy & cybersecurity • Search Engine Optimization •
+              Figma • Privacy & cybersecurity • Search Engine Optimization •
               Logo design{' '}
             </span>
           </div>
