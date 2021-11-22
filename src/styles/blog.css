@@ -178,6 +178,7 @@
 .blog-body a {
   border-bottom: 3px solid var(--secondary-color);
   color: #000;
+  color: #007acc;
 }
 .blog-body a:hover {
   color: #007acc;
@@ -245,6 +246,7 @@ code {
   background: rgb(255, 255, 255);
   border-left: 4px solid var(--secondary-color);
   overflow: scroll;
+  color: #555;
 }
 
 @media screen and (max-width: 1000px) {

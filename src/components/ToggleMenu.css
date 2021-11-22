@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
 
 :root{
-  --secondary-color: hsl(56, 99%, 55%);
   --dark-black: #000;
   --light-black: #333;
   --primary-font: 'Merriweather','Georgia',serif;
