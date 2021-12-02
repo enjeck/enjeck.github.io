@@ -1,0 +1,794 @@
+---
+title: Predictive modeling of weight changes using differential equations
+date: "2021-11-08"
+categories: ["math", "javascript"]
+---
+
+Inspired by my own challenges with weight fluctuations, I wanted to explore how people's weight might change based on calorie consumption. This article details how I went about modelling weight change with differential equations, and building a web application around this model. With the web app, users can enter personal information and see how their weight might change per month over time. This data will be visualized using a table and a line graph.
+
+Here is the [final website](https://enjeck.com/weight-change-prediction/).
+
+View the code on [GitHub](https://github.com/enjeck/weight-change-prediction).
+
+## The mathematical model
+
+Differential equations have many applications in the real world.
+They are especially useful whenever you want to model how a system changes with respect to something, usually time. It can be a mechanical system like a pendulum, a dynamic system like the interaction of planets in space, an economic system like population decline/explosion, and so much more. For this project, the goal was to apply differential equations to build a model for predicting human weight changes based on calorie consumption.
+
+Initially, I considered basing my model on energy expenditure per kilogram. The daily rate of energy expenditure is between 35 and 45 calories per kg per day, depending on the person's sex, age, activity level, and other factors. I was not sure how to adjust this daily energy expenditure to reflect these factors. For simplicity, I could have just assumed that a person's daily average energy expenditure is the mean of 35 and 45, which is 40 calories per kg per day. Rather than make this assumption, I decided to use the basal metabolic rate.
+
+The [basal metabolic rate (BMR)](https://en.wikipedia.org/wiki/Basal_metabolic_rate) is the rate of energy expenditure per unit time by endothermic animals at rest. The [Mifflin St Jeor equation](https://en.wikipedia.org/wiki/Basal_metabolic_rate#BMR_estimation_formulas) is considered one of the most accurate formula to calculate BMR:
+
+$$
+P = \left({10.0m \over 1kg} + {6.25h\over 1cm} - {5.0a\over 1year} + s \right) \frac{kcal}{day}
+$$
+
+where,
+
+- _m_ = body mass in kg
+- _h_ = height in cm
+- _a_ = age in years
+- _s_ = +5 for men and -161 for women
+
+For example, a 25-year-old woman weighing 80kg and 170cm tall would have a BMR of 1576.5 kcal per day. This value is the number of calories her body spends at complete rest. Performing activities like going to work, doing house chores, or exercising increases the total daily expenditure. A normal person does not spend all day at rest, so we can scale the BMR, _P_, by an "activity factor" which depends on daily activities. The value of this activity factor varies based on activity:
+
+| Level of Activity                                         | Activity factor |
+| --------------------------------------------------------- | --------------- |
+| Bed rest (Bedridden - Unconscious)                        | 1.0-1.1         |
+| Sedentary (Little to no exercise )                        | 1.2             |
+| Light exercise (1-3 days per week)                        | 1.3             |
+| Moderate exercise (3-5 days per week)                     | 1.5             |
+| Heavy exercise (6-7 days per week)                        | 1.7             |
+| Very heavy exercise (twice per day, extra heavy workouts) | 1.9             |
+
+Including this activity factor, _f_, into the BMR formula, we get our estimated total daily energy expenditure, which we shall call _T_,
+
+$$
+T = f (10m + 6.25h - 5a + s)
+$$
+
+According to the activity factor chart, if the woman in the aforementioned example does light exercise, her total daily energy expenditure is 1.3\*1576.5 ≈ 2050. What does this mean in terms of weight change? It means in order to lose weight, this woman must consume less than 2050 calories daily. Consuming more than 2050 calories will result in weight gain.
+
+No matter the approach taken to build a mathematical model for weight change, we shall always end up using the [first law of thermodynamics](https://en.wikipedia.org/wiki/First_law_of_thermodynamics) to create an equation expressed in terms of exponential decay or growth.
+
+The fact that the equation will have an exponential term (that is, using Euler's number, _e_) makes sense, when you come to think of it. For clarity, suppose the woman in the example above wants to lose weight. It is estimated that 7700 calories equal one kilogram. If the woman reduces her daily calorie intake to 1500 calories, this produces a deficit of 550 calories. Assuming she follows the diet strictly, in 2 weeks (14 days), this woman should accrue a total calorie deficit of 7700, which equates to 1 kilogram lost. Therefore, she should lose 2kg in 4 weeks, 3kg in 6 weeks, 6kg in 8 weeks, right?
+
+Wrong!
+
+The rate of weight change is not constant, because as she loses weight, her BMR changes, which means she must adjust her calorie intake. For this reason, the weight change equation will have an exponential decay term based on time, which governs how the rate of weight loss slows down as weight (and BMR) changes.
+
+The first law of thermodynamics states that:
+
+$$
+Change\ in\ energy = heat\ added - work\ done\ by\ the\ system
+$$
+
+Applying this law to food eaten, we have:
+
+$$
+Calories\ surplus\ or\ deficit = calories\ in - calories\ out
+$$
+
+Let variable _n_ represent the daily calories intake. Calories out is given by the total daily energy expenditure (_T_) value stated earlier:
+
+$$
+Net\ daily\ calorie\ surplus/deficit = n - T
+$$
+
+$$
+Net\ daily\ calorie\ surplus/deficit = n - f (10m + 6.25h - 5a + s)
+$$
+
+Instead of using the variable _m_, let's replace it with _w(t)_, which represents the weight after time _t_ (in days):
+
+$$
+Net\ daily\ calorie\ surplus/deficit = n - f (10w(t) + 6.25h - 5a + s)
+$$
+
+If we estimate one kilogram to be 7700 calories, then dividing the equation by 7700 gives the weight change:
+
+$$
+weight\ change = \frac{n - f (10w(t) + 6.25h - 5a + s)}{7700}
+$$
+
+This change in weight is approximately the derivative of _w(t)_:
+
+$$
+\frac{dw(t)}{dt} = \frac{n - f (10w(t) + 6.25h - 5a + s)}{7700}
+$$
+
+This is a first order ordinary differential equation. We can solve for _w(t)_ via [separation of variable](https://en.wikipedia.org/wiki/Separation_of_variables). At first glance, the equation may not look separable, but it is.
+
+$$
+\frac{dw(t)}{dt} = \frac{n -10fw(t) - f(6.25h - 5a + s)}{7700}
+$$
+
+$$
+\frac{dw(t)}{dt} = \frac{-10fw(t)}{7700} + \frac{n - f(6.25h - 5a + s)}{7700}
+$$
+
+$$
+\frac{dw(t)}{dt} = \frac{-fw(t)}{770} + \frac{n - f(6.25h - 5a + s)}{7700}
+$$
+
+The differential equation has only two main variables _w(t)_ (dependent variable) and _t_ (independent variable) because the derivative term says $\frac{dw(t)}{dt}$. To ease calculations, we can temporarily treat the other variables (_f_, _h_, _a_, _s_) as constants:
+
+$$
+Let\ k = \frac{n - f(6.25h - 5a + s)}{7700}
+$$
+
+$$
+\frac{dw(t)}{dt} = \frac{-fw(t)}{770} + k
+$$
+
+To separate, we multiply through by _dt_ and divide by $\frac{-fw(t)}{770} + k$
+
+$$
+\frac{dw(t)}{{-fw(t)\over 770} + k} = dt
+$$
+
+Now, we proceed as we normally would when solving separable ordinary differential equations, by integrating:
+
+$$
+\int\frac{dw(t)}{{-fw(t)\over 770} + k} = \int{dt}
+$$
+
+$$
+\int\frac{1}{{-fw(t)\over 770} + k}dw(t) = \int{dt}
+$$
+
+$$
+{1 \over {-f\over 770}} \log \left|{{-fw(t)\over 770} + k}\right| = t + c_{1}
+$$
+
+where $c_1$ is the constant of integration.
+
+$$
+\log \left|{{-fw(t)\over 770} + k}\right| = {-f\over 770} (t + c_{1})
+$$
+
+Putting everything in base _e_, the _log_ cancels out and we get:
+
+$$
+\frac{-fw(t)}{770} + k = \pm e^{\frac{-f}{770} (t + c_1)}
+$$
+
+$$
+\frac{-fw(t)}{770} + k = \pm c_1 e^{\frac{-ft}{770}}
+$$
+
+$$
+\frac{-fw(t)}{770} = \pm c_1 e^{\frac{-ft}{770}} - k
+$$
+
+$$
+-fw(t) = 770(\pm c_1 e^{\frac{-ft}{770}} - k)
+$$
+
+$$
+fw(t) = \pm770 c_1 e^{\frac{-ft}{770}} + 770 k
+$$
+
+$$
+Let\ c_2 = \pm770 c_1
+$$
+
+$$
+fw(t) = c_2e^{\frac{-ft}{770}} + 770 k
+$$
+
+$$
+w(t) = \frac{c_2e^{\frac{-ft}{770}} + 770 k} {f}
+$$
+
+$$
+w(t) = \frac{c_2e^{\frac{-ft}{770}}}{f} + \frac{770 k} {f}
+$$
+
+$$
+Let\ c = \frac{c_2}{f}
+$$
+
+$$
+w(t) = ce^{\frac{-ft}{770}} + \frac{770 k} {f}
+$$
+
+Replacing _k_ with its original expression, we get:
+
+$$
+w(t) = ce^{\frac{-ft}{770}} + \frac{770}{f} \left(\frac{n - f(6.25h - 5a + s)}{7700} \right)
+$$
+
+$$
+w(t) = ce^{\frac{-ft}{770}} + \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+We can now solve for the constant _c_. Generally, at the starting weight, t = 0 (that is, at day 0). Substituting _t = 0_ in the equation, we get:
+
+$$
+w(0) = ce^{0} + \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+$$
+w(0) = c + \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+$$
+c = w(0) - \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+For any person, given a starting weight _w(0)_, number of calories eaten per day _n_, activity factor _f_, height _h_, age _a_ and sex _s_, we can calculate the constant _c_. The value of _c_ will then be substituted back into the equation, and can be used to calculate the weight after any amount of time, e.g after 1 year.
+
+Let's consider the example woman again. She is 25 years old, initially weighs 80kg, 170cm in height and eats 1500 calories daily.
+
+- f = 1.3
+- h = 170cm
+- s = -161
+- w(0) = 80kg
+- a = 25
+- n = 1500
+
+$$
+c = 80 - \frac{1500 - 1.3(6.25(170) - 5(25) -161)}{10(1.3)}
+$$
+
+$$
+c = 80 - 37.7
+$$
+
+$$
+c = 42.3
+$$
+
+Fitting _c = 42.3_ into the original equation, we get the following solution for this woman:
+
+$$
+w(t) = 42.3e^{\frac{-ft}{770}} + \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+The value of _c_ varies from person to person, since it is based on personal information like age, height, activity, sex and calorie intake.
+
+For this particular woman, we can now find out her weight after 1 year (_t_ = 365 days):
+
+$$
+w(365) = 42.3e^{\frac{-(1.3)(365)}{770}} + \frac{1500 - 1.3(6.25(170) - 5(25) - 161)}{10(1.3)}
+$$
+
+$$
+w(365) = 22.8 + 37.7
+$$
+
+$$
+w(365) = 60.5
+$$
+
+So, after 1 year, this woman's weight has dropped from 80kg to 60.5kg. Losing 19.5kg over a year is a pretty realistic prediction. After 2 years, her weight should be 50kg, a difference of 10kg from the first year's loss. As you can see, as she loses weight over time, the rate of weight loss slows down. This is how it goes in real life.
+
+## The code
+
+The hard part is done. Now, we can easily translate the mathematical model into code. Using HTML, CSS and JavaScript, we will build a web app that accepts age, height, current weight, sex and diet as input and then shows a month-by-month prediction (in the form of a table of value and line chart) of how a person's weight might change over 8 years. Assuming they stick to the diet, of course.
+
+#### HTML
+
+For the most part, the HTML code is a series of input fields and an output area. In the `<head>` of the file, there's a `<script>` adding the [D3.js library](https://d3js.org/), that will be used to draw the line chart. All input fields are marked as `required` to ensure that the user fills them out. The age, height, current weight and calories fields are given `type=number` to prevent invalid non-numeric entries.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Weight change prediction</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+    <!-- D3 library used to draw line graph -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div id="main">
+      <div class="intro">
+        <h1>Weight change prediction</h1>
+        <p>
+          If you eat X number of calories a day, will you gain or lose weight?
+          And how does this weight change look like over time? Let's find out!
+        </p>
+      </div>
+      <form id="form">
+        <!-- Series of input fields -->
+        <label for="age">Enter your age (in years): </label>
+        <br />
+        <input placeholder="e.g 25" type="number" id="age" required />
+        <br />
+        <label for="weight">Enter your current weight (in kg): </label>
+        <br />
+        <input type="number" id="weight" required />
+        <br />
+        <label for="height">Enter your height (in cm): </label>
+        <br />
+        <input type="number" id="height" required />
+        <br />
+        <label for="diet">How many calories will you eat daily?: </label>
+        <br />
+        <input type="number" id="diet" required />
+        <br />
+        <div>
+          <p>Enter your sex:</p>
+          <input
+            type="radio"
+            id="sexChoice1"
+            name="sex"
+            value="male"
+            required
+          />
+          <label for="sexChoice1">Male</label>
+
+          <input
+            type="radio"
+            id="sexChoice2"
+            name="sex"
+            value="female"
+            required
+          />
+          <label for="sexChoice2">Female</label>
+        </div>
+        <label for="activity">How many calories will you eat daily?: </label>
+        <br />
+        <select name="activity" id="activity" required>
+          <option value="sedentary">Sedentary (Little to no exercise )</option>
+          <option value="light-exercise">
+            Light exercise (1-3 days per week)
+          </option>
+          <option value="moderate-exercise">
+            Moderate exercise (3-5 days per week)
+          </option>
+          <option value="heavy-exercise">
+            Heavy exercise (6-7 days per week)
+          </option>
+          <option value="v-heavy-exercise">
+            Very heavy exercise (twice per day, extra heavy workouts)
+          </option>
+        </select>
+        <br />
+        <!-- Submit button -->
+        <input type="submit" value="Predict" id="predict-btn" />
+      </form>
+      <div id="output">
+        <h2 class="output-text">Predictions over 100 months (~8 years)</h2>
+
+        <!-- Output area for the line chart-->
+        <h3 class="output-text">Line chart</h3>
+        <div id="line-chart"></div>
+
+        <!-- Output area for the table of chart-->
+        <h3 class="output-text">Table of values</h3>
+        <div id="table"></div>
+      </div>
+    </div>
+  </body>
+</html>
+```
+
+#### CSS
+
+Here is some basic styling:
+
+```css
+.top-menu {
+  padding: 20px 5%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.top-menu a {
+  font-weight: bold;
+}
+
+#main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 10px;
+  font-family: "Courier New", Courier, monospace;
+  scroll-behavior: smooth;
+}
+
+.intro h1 {
+  text-align: center;
+  font-weight: bold;
+  color: blueviolet;
+  text-shadow: 1px 1px 1px black;
+  text-transform: uppercase;
+}
+
+.intro p {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+#form {
+  padding: 20px;
+  background: #eee;
+}
+
+#form input,
+select {
+  padding: 5px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+#form label {
+  line-height: 30px;
+}
+
+#form #predict-btn {
+  outline: non;
+  border: 0;
+  background: blueviolet;
+  padding: 10px 40px;
+  margin-top: 20px;
+  color: #fff;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#output,
+#line-chart {
+  width: 100%;
+  height: auto;
+  margin: auto;
+}
+
+#line-chart {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+h2.output-text {
+  color: blueviolet;
+  text-decoration: none;
+}
+
+.output-text {
+  margin-top: 50px;
+  text-align: center;
+  text-decoration: underline;
+  /* Hide the output area text by default*/
+  display: none;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  max-width: 1000px;
+  margin: auto;
+  margin-bottom: 40px;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  width: 25%;
+}
+.red {
+  color: red;
+}
+.green {
+  color: green;
+}
+```
+
+#### JavaScript
+
+When the user submits the form (by clicking the "Predict" button), we intend to display a table of data and a graph on the same page. To make this seamless, let's stop the default behavior of page reload upon form submission:
+
+```js
+// Prevent the page from reloading when form is submitted
+var form = document.getElementById("form");
+function handleForm(event) {
+  event.preventDefault();
+}
+form.addEventListener("submit", handleForm);
+```
+
+Let's listen for when the submit button is click and then call a hander:
+
+```js
+document.querySelector("#predict-btn").addEventListener("click", predict);
+```
+
+The `predict` function will hold all the code required to calculate the weight changes and display on the page. Henceforth, every code snippet is placed within `predict`.
+
+```js
+function predict() {
+  // Main code in here
+}
+```
+
+The following code retrieves data entered into the form's input fields.
+
+```js
+// Get various values entered by user
+let a = parseFloat(document.querySelector("#age").value);
+let h = parseFloat(document.querySelector("#height").value);
+let w_0 = parseFloat(document.querySelector("#weight").value);
+let s, f;
+let sex_value = document.querySelector("input[name=sex]:checked").value;
+let activity_value = document.querySelector("#activity").value;
+let n = parseFloat(document.querySelector("#diet").value);
+```
+
+Next, we validate user input. If a field is left empty or filled with a wrong data type, we exit the `predict` function and the user is automatically shown an error message next to the problematic input.
+
+```js
+if (isNaN(n) || isNaN(h) || isNaN(w_0) || isNaN(a) || sex_value === "") {
+  return;
+}
+```
+
+Recall that from our mathematical model, the numeric values assigned to "sex" and "activity factor" vary. We can handle these using an if-else and switch statement respectively:
+
+```js
+// Set value based on sex
+if (sex_value === "female") {
+  s = -161;
+} else {
+  s = 5;
+}
+
+// Set activity value based on selected activity
+switch (activity_value) {
+  case "sedentary":
+    f = 1.2;
+    break;
+  case "light-exercise":
+    f = 1.3;
+    break;
+  case "moderate-exercise":
+    f = 1.5;
+    break;
+  case "heavy-exercise":
+    f = 1.7;
+    break;
+  case "v-heavy-exercise":
+    f = 1.9;
+    break;
+  default:
+    f = 1.2;
+    break;
+}
+```
+
+Using data entered by the user, we can calculate the integration constant, _c_:
+
+```js
+// Calculate the integration constant
+let k = (n - f * (6.25 * h - 5 * a + s)) / (10 * f);
+let c = w_0 - k;
+```
+
+We will create and populate the table of results using JavaScript. Let's define the table's markup:
+
+```js
+let table_start = `
+            <table>
+              <tr>
+              <th>Month</th>
+              <th>Weight (kg)</th>
+              <th>Monthly change (kg)</th>
+              <th>Total change (kg)</th>
+              </tr>`;
+let table_end = `</table>`;
+let table_data = "";
+```
+
+Defining a few variables that will be used later to populate the table and line chart:
+
+```js
+let w_t;
+// dataset to be used for line chart
+let weightTime = [{ time: 0, weight: w_0 }];
+let textColor;
+```
+
+Using a loop, we shall calculate the weight change for each month, insert the data into the table and also save into the `weightTime` object to be used late to construct the line chart. Notice that the loop goes from 1 to 101. Each iteration of the loop calculates the weight change at the `j`th month. Since the calculations are done for a total of 100 months, the results gotten predict a person's weight change over a period of about 8 years.
+
+```js
+for (let j = 1; j < 101; j++) {
+  // Using the assumption that one month is 30 days
+  let t = j * 30;
+  w_t = c * Math.exp((f * t) / -770) + k;
+  // Rounding to 2 decimal places
+  w_t = Math.round((w_t + Number.EPSILON) * 100) / 100;
+
+  // Create and insert object
+  let obj = {
+    time: j,
+    weight: w_t,
+  };
+  // Populate the line chart dataset
+  weightTime.push(obj);
+
+  let prev_t = (j - 1) * 30;
+  let prev_w_t = c * Math.exp((f * prev_t) / -770) + k;
+  let diff_w_t = w_t - prev_w_t;
+  let diff_w_t_round = Math.round((diff_w_t + Number.EPSILON) * 100) / 100;
+  let diff_w_0 = w_t - w_0;
+  let diff_w_0_round = Math.round((diff_w_0 + Number.EPSILON) * 100) / 100;
+
+  let sign;
+  /* If the weight change is less than starting weight,
+        give text a class corresponding to red color . Otherwise,
+        green text*/
+  /* Put plus sign in front of positive values */
+
+  if (diff_w_t < 0) {
+    textColor = "red";
+    sign = "";
+  } else {
+    textColor = "green";
+    sign = "+";
+  }
+
+  table_data += `
+            <tr>
+            <td> ${j}</td>
+            <td>${w_t}</td>
+            <td class="${textColor}">${sign}${diff_w_t_round}</td>
+            <td class="${textColor}">${sign}${diff_w_0_round}</td>
+            </tr>`;
+}
+```
+
+With the table populated with data, we can now fully build it and show it to the user:
+
+```js
+let table = table_start + table_data + table_end;
+table = new DOMParser().parseFromString(table, "text/xml");
+const output = document.getElementById("table");
+if (output.innerHTML) {
+  // Prevent multiple tables from being added
+  // Force every added table to replace previous table
+  output.innerHTML = "";
+  output.appendChild(table.documentElement);
+} else {
+  output.appendChild(table.documentElement);
+}
+```
+
+Using the `DomParser()` to create a DOM element from a string might lead to some weird layout issues, which are very apparent with table. To fix this issue, we can copy the table and reinsert it to the page again:
+
+```js
+// Workaround to fix table layout bug
+table = output.innerHTML;
+output.innerHTML = table;
+```
+
+A table is a good way to display our data. But it does not adequately visualize the weight changes. It will be nice to have a graphical representation of a person's historical weight change, connected as a series of data points with a continous line. A line chart is ideal in the scenario. The D3.js library helps us do this:
+
+```js
+/* Creating the bar chart */
+// set the dimensions of the graph
+width = Math.min(800, window.innerWidth / 1.1);
+height = Math.max(width, 600);
+
+// append the svg object to the body of the page
+document.getElementById("line-chart").innerHTML = "";
+var svg = d3
+  .select("#line-chart")
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+let lastEl = weightTime[weightTime.length - 1];
+
+// Calculate the axis values
+var xScale = d3
+    .scaleLinear()
+    .domain([0, lastEl.time + 1])
+    .range([0, width / 1.2]),
+  yScale = d3
+    .scaleLinear()
+    .domain([
+      Math.min(w_0 - 5, lastEl.weight - 5),
+      Math.max(w_0 + 2, lastEl.weight + 2),
+    ])
+    .range([height / 1.2, 0]);
+
+var g = svg.append("g").attr("transform", "translate(" + 50 + "," + 50 + ")");
+
+// X-axis label
+svg
+  .append("text")
+  .attr("x", width / 2.2)
+  .attr("y", height / 1.05 + 10)
+  .attr("text-anchor", "middle")
+  .style("font-family", "Helvetica")
+  .style("font-size", 10)
+  .style("font-weight", "bold")
+  .text("Time in months");
+
+// Y-axis label
+svg
+  .append("text")
+  .attr("text-anchor", "middle")
+  .attr("transform", "translate(20," + height / 2 + ")rotate(-90)")
+  .style("font-family", "Helvetica")
+  .style("font-size", 10)
+  .style("font-weight", "bold")
+  .text("Weight in kilograms");
+
+// X-axis scale
+g.append("g")
+  .attr("transform", "translate(0," + height / 1.2 + ")")
+  .call(d3.axisBottom(xScale));
+
+g.append("g").call(d3.axisLeft(yScale));
+
+// Dots
+svg
+  .append("g")
+  .selectAll("dot")
+  .data(weightTime)
+  .enter()
+  .append("circle")
+  .attr("cx", function (d) {
+    return xScale(d.time);
+  })
+  .attr("cy", function (d) {
+    return yScale(d.weight);
+  })
+  .attr("r", 3)
+  .attr("transform", "translate(" + 50 + "," + 50 + ")")
+  .style("fill", textColor);
+
+// Line
+var line = d3
+  .line()
+  .x(function (d) {
+    return xScale(d.time);
+  })
+  .y(function (d) {
+    return yScale(d.weight);
+  })
+  .curve(d3.curveMonotoneX);
+
+svg
+  .append("path")
+  .datum(weightTime)
+  .attr("class", "line")
+  .attr("transform", "translate(" + 50 + "," + 50 + ")")
+  .attr("d", line)
+  .style("fill", "none")
+  .style("stroke", textColor)
+  .style("stroke-width", "2");
+```
+
+Finally, after the table and line chart are built and added to the page, let's automatically scroll down to the output area and display hidden headings:
+
+```js
+// Automatically scroll to the output area after it is output generated
+let anchor = document.createElement("a");
+anchor.setAttribute("href", "#output");
+anchor.click();
+
+// Show hidden text in output area
+let hiddenText = document.querySelectorAll(".output-text");
+for (let m = 0; m < hiddenText.length; m++) {
+  hiddenText[m].style.display = "block";
+}
+```
+
+The [complete source code](https://github.com/enjeck/weight-change-prediction/) is available on GitHub. 
+
+### Credits
+
+- https://en.wikipedia.org/wiki/Basal_metabolic_rate
+- https://clinmedjournals.org/articles/jnmdc/jnmdc-2-016table1.html
+- https://www.researchgate.net/publication/256293379_A_Mathematical_Diet_Model
+- https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3975626/
+- http://jeffq.com/blog/modeling-weight-loss-with-differential-equations/
