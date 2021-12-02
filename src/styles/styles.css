@@ -3,18 +3,23 @@
 
 :root{
   --secondary-color: hsl(56, 99%, 55%);
-  --dark-black: #000;
-  --light-black: #333;
+  --dark-black: #333;
+  --light-black: #555;
   --primary-font: 'Merriweather','Georgia',serif;
   --secondary-font: 'Anton', sans-serif;
+  --color1: #d43d70;
+  --color2: #455deb;
+  --color3: #328186;
+  --color4: #fd7038;
+  --color5: #e364a9;
+  --color6: #6b184c;
 }
 
 *{
   transition: 0.5s;
   margin: 0;
   padding: 0;
-  box-sizing: border-box
-  
+  box-sizing: border-box;
 }
 
 html{
@@ -25,7 +30,7 @@ html{
 }
 
 body{
-  width:100%;
+  width:100vw;
   padding:0;
   margin:0;
   overflow-x:hidden;
@@ -58,13 +63,10 @@ a {
   height: 100%;
   margin:0;
   padding: 0;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.8);
   overflow-x: hidden;
 }
 
-.indexpage{
-  background: rgba(255,255,255,0.1);
-}
 
 #pages{
  width: 100%;
@@ -104,17 +106,19 @@ a {
   text-transform:uppercase;
   font-size: 5.3vw;
   letter-spacing: 0.1vw;
-  line-height: 6.3vw;
+  line-height: 7.3vw;
   hyphens: auto;
 
 }
 
 .introduction h2 span, .flip-text > div > div {
   transition: 1s;
-  text-shadow: 2px 2px 0px var(--secondary-color);
+   text-shadow: 2px 2px 0px var(--secondary-color); 
+  text-decoration: underline;
+  text-decoration-color: var(--secondary-color);
 }
 .introduction h2 span:hover, .flip-text > div > div:hover{
-  text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+  text-shadow: 0px 0px 0px rgba(0,0,0,0.3);
   transition: 1s;
 }
 
@@ -142,10 +146,6 @@ a {
 
 .write:hover {
  cursor: url("./../../content/assets/pencil-emoji.svg"), auto;
-}
-
-.menu a:hover{
-  cursor: url("./../../content/assets/cursor-large.svg"), auto;
 }
 
 .scroll-down {
@@ -204,54 +204,57 @@ a {
 	width: 15px;
 }
 
-/* Skills horizontal scroll */
+/* Skills marquee */
 
-#skills{
-  margin-bottom: 5vh;
-  position: relative;
-  overflow: hidden;
+#skills {
+  margin-top: 3em;
 }
-.skills, .langs {
+
+.marquee {
   font-size: 2rem;
   font-family: 'Merriweather','Georgia',serif;
-  display: inline-block;
-  white-space: nowrap;
-  color: var(--light-black);
-  background-color:var(--secondary-color);
-  margin: 10px 0;
+  display: flex;
+  justify-content: space-around;
+}
+.marquee span {
+  min-width: 200px;
+  padding: 30px 40px;
+  margin: 20px;
+  border: 2px solid;
+  text-align: center;
 }
 
-.skills span, .langs span{
-  display: inline-block;
-  white-space: nowrap;
-  animation: floatText 40s infinite linear;
+.marquee span:nth-of-type(n) {
+  border-color: var(--color1);
+  color: var(--color1);
 }
 
-.langs span{
-  animation: floatTextRight 40s infinite linear;
+.marquee span:nth-of-type(2n) {
+  border-color: var(--color2);
+  color: var(--color2);
 }
 
-.skills:hover, .langs:hover  {
-  animation-play-state: paused;
+.marquee span:nth-of-type(3n) {
+  border-color: var(--color3);
+  color: var(--color3);
 }
 
-@keyframes floatText {
-  from{
-    transform: translateX(0%);
-  }
-  to {
-    transform: translateX(-100%);
-  }
+.marquee span:nth-of-type(4n){
+  border-color:var(--color4);
+  color: var(--color4);
 }
 
-@keyframes floatTextRight {
-  from{
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0%);
-  }
+.marquee span:nth-of-type(5n){
+  border-color: var(--color5);
+  color: var(--color5);
 }
+
+.marquee span:nth-of-type(6n) {
+  border-color: var(--color6);
+  color: var(--color6);
+}
+
+
 
 /* Second page / Works */
 
@@ -303,7 +306,7 @@ a {
 	align-items: center;
 	justify-content: center;
 	padding: 0 1rem;
-  padding-bottom: 8rem;
+  padding-bottom: 5rem;
 }
 .work-col {
 	width: 90%;
@@ -311,7 +314,7 @@ a {
 
 .work-col__name {
   -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
-  -webkit-text-stroke-width: 1.1px;
+  -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: #27282C;
    font-family: 'Anton', sans-serif;
 	/*font-family: var(--font-headings);*/
@@ -330,8 +333,22 @@ a {
 	font-size: 1.6rem;
   color: var(--light-black);
 	transition: all .4s cubic-bezier(.215,.61,.355,1) .6s;
-	transform: translateY(3rem);
+	transform: translateY(2rem);
   text-shadow: 1px 1px 5px #fff;
+}
+
+.btn-project-link {
+	height: 40px;
+  width: 100px;
+  margin-top: 4rem;
+	padding-top: 10;
+	padding-bottom: 10px;
+  display:block;
+  transform: translateY(1rem);
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 20px;
+  border-bottom: 4px solid var(--secondary-color);
 }
 
 .btn-work {
@@ -386,8 +403,6 @@ a {
 	transition: all .4s cubic-bezier(.215,.61,.355,1) .6s;
   top: 55%;
 	right: 35%;
-  z-index: -1;
-  filter: drop-shadow(1px 1px 10px rgba(0,0,0,0.4));
 }
 
 .work-medias__img {
@@ -402,10 +417,12 @@ a {
 .work-medias__img img{
   width: 100%;
   height: auto;
-  filter: invert(5%) sepia(5%) ;
-  border: 1px solid #eee;
-
+  border: 4px solid;
 }
+.work-medias__img img:nth-of-type(n) {
+  border-color: var(--secondary-color);
+}
+
 .work-medias__img:first-of-type {
 	transform: translate(-10%,-50%) rotate(0);
 }
@@ -425,7 +442,7 @@ a {
 
 .contact-page{
   padding: 3vw;
-  padding-top: 10rem;
+  margin-top: 6rem;
   position: relative;
 }
 
@@ -516,14 +533,13 @@ footer {
   width: 100%;
   text-align: center;
   padding: 20px;
-  background: var(--light-black);
   color: #eee;
   margin-top: 30px;
 }
 
 footer .copyright {
   font-size: 14px;
-  color: #ddd;
+  color: #333;
   margin: 0px;
 padding: 0px;
 border: 0px none;
@@ -532,9 +548,11 @@ border: 0px none;
 /* Responsive */
 
 @media screen and (max-width: 1100px) {
+
   .introduction h2 {
     font-size: 6.0vw;
     line-height: 7.3vw;
+    letter-spacing: 2px;
   }
   .work-col{
     width: 95%;
@@ -557,6 +575,9 @@ border: 0px none;
 }
 
 @media screen and (max-width: 800px) {
+  .introduction h2 span, .flip-text > div > div {
+    text-decoration: none;
+  }
 
   .introduction{
     margin: auto;
@@ -567,6 +588,7 @@ border: 0px none;
     font-size:25px;
   }
   .introduction h2 {
+    letter-spacing: 1.2px;
     -webkit-text-stroke-width: 1px;
     font-size: 8.0vw;
     line-height: 9.3vw;
@@ -576,9 +598,12 @@ border: 0px none;
     font-size: 15px;
   }
 
-  .skills, .langs {
+  .marquee span {
     font-size: 1.2rem;
+    margin: 15px;
+    padding: 15px 20px;
 }
+
 
   .work-col__name {
     font-size: 6.5rem;
@@ -586,6 +611,8 @@ border: 0px none;
     margin-bottom: 0;
     line-height: 1.1;
     margin: 0 2px;
+    letter-spacing: 2px;
+    -webkit-text-stroke-width: 1.5px;
   }
   
   .work-col__text {
@@ -653,7 +680,7 @@ border: 0px none;
 
   .work-col__name {
     font-size: 4.5rem;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
   }
   
   .work-col__text {

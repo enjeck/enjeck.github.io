@@ -5,6 +5,12 @@
   --light-black: #333;
   --primary-font: "Merriweather", "Georgia", serif;
   --secondary-font: "Anton", sans-serif;
+  --color1: #d43d70;
+  --color2: #455deb;
+  --color3: #328186;
+  --color4: #fd7038;
+  --color5: #e364a9;
+  --color6: #6b184c;
 }
 
 .blog-main {
@@ -88,33 +94,33 @@
 }
 
 .blog-item:nth-of-type(n) .blog-item-content {
-  border-color: #d43d70;
-  color: #d43d70;
+  border-color: var(--color1);
+  color: var(--color1);
 }
 
 .blog-item:nth-of-type(2n) .blog-item-content {
-  border-color: #455deb;
-  color: #455deb;
+  border-color: var(--color2);
+  color: var(--color2);
 }
 
 .blog-item:nth-of-type(3n) .blog-item-content {
-  border-color: #328186;
-  color: #328186;
+  border-color: var(--color3);
+  color: var(--color3);
 }
 
 .blog-item:nth-of-type(4n) .blog-item-content {
-  border-color: #fd7038;
-  color: #fd7038;
+  border-color: var(--color4);
+  color: var(--color4);
 }
 
 .blog-item:nth-of-type(5n) .blog-item-content {
-  border-color: #e364a9;
-  color: #e364a9;
+  border-color: var(--color5);
+  color: var(--color5);
 }
 
 .blog-item:nth-of-type(6n) .blog-item-content {
-  border-color: #6b184c;
-  color: #6b184c;
+  border-color: var(--color6);
+  color: var(--color6);
 }
 
 .category {
@@ -129,27 +135,27 @@
 }
 
 .blog-item:nth-of-type(n) .category {
-  background-color: #d43d70;
+  background-color: var(--color1);
 }
 
 .blog-item:nth-of-type(2n) .category {
-  background-color: #455deb;
+  background-color:var(--color2);
 }
 
 .blog-item:nth-of-type(3n) .category {
-  background-color: #328186;
+  background-color: var(--color3);
 }
 
 .blog-item:nth-of-type(4n) .category {
-  background-color: #fd7038;
+  background-color: var(--color4);
 }
 
 .blog-item:nth-of-type(5n) .category {
-  background-color: #e364a9;
+  background-color: var(--color5);
 }
 
 .blog-item:nth-of-type(6n) .category {
-  background-color: #6b184c;
+  background-color: var(--color6);
 }
 
 .blog-item h3 {
@@ -246,7 +252,7 @@ code {
   background: rgb(255, 255, 255);
   border-left: 4px solid var(--secondary-color);
   overflow: scroll;
-  color: #555;
+  color: #333;
 }
 
 @media screen and (max-width: 1000px) {

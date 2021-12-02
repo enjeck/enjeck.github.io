@@ -1,11 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
-
-:root{
-  --dark-black: #000;
-  --light-black: #333;
-  --primary-font: 'Merriweather','Georgia',serif;
-  --secondary-font: 'Anton', sans-serif;
-}
 
 .toggle-menu {
     width: 100%;
@@ -15,7 +7,9 @@
     top: 0;
     left: 0;
 }
-
+.toggle-menu-items {
+    /* background: rgb(251, 246, 201) !important; */
+}
 .menu-options {
     position: absolute;
     width: 100%;
@@ -43,10 +37,11 @@
   background: var(--secondary-color);
   box-shadow: 2px 2px 1px var(--dark-black);
   transform: rotate(0deg);
+  border: 1px solid var(--light-black)
 }
 
 .logo {
-    width: 80px;
+    width: 60px;
     height:auto;
 }
 
@@ -103,26 +98,31 @@
 }
 
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 800px) {
 
 
 .logo {
-    width: 60px;
+    width: 50px;
     height:auto;
 }
 
 .hamburger-icon {
     width: 35px;
-    height: 25px;
+    height: 30px;
 }
 
 .hamburger-icon span {
-    height: 6px;
+    height: 7px;
+    box-shadow: 1px 1px 1px var(--dark-black);
+    transform: rotate(0deg);
+    border: 1px solid var(--light-black);
+    box-shadow: 1px 1px 1px var(--dark-black);
   }
+
 
 .toggle-menu-item {
     font-size: 4rem;
-    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-width: 1.3px;
       letter-spacing: 0.3rem;
       line-height: 4rem;
       text-shadow: 0.4vw 0.4vw 0px hsl(56, 99%, 55%);
@@ -130,6 +130,23 @@
   }
 
   @media screen and (max-height: 700px) {
+    .logo {
+        width: 50px;
+        height:auto;
+    }
+    .hamburger-icon {
+        width: 35px;
+        height: 30px;
+    }
+
+    .hamburger-icon span {
+        height: 7px;
+        box-shadow: 1px 1px 1px var(--dark-black);
+        transform: rotate(0deg);
+        border: 1px solid var(--light-black);
+        box-shadow: 1px 1px 1px var(--dark-black);
+      }
+
     .toggle-menu-item {
         width: 100%;
         padding: 10px;
@@ -143,6 +160,7 @@
 }
 
 @media screen and (max-height: 500px) {
+
 
     .toggle-menu-items {
         padding-top: 50px;
