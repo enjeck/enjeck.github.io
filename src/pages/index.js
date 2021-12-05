@@ -307,7 +307,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMdx(limit: 4, sort: { fields: [frontmatter___date], order: DESC }) {
+    allMdx(limit: 3, sort: { fields: [frontmatter___date], order: DESC }) {
       edges {
         node {
           excerpt(pruneLength: 260)
