@@ -1,0 +1,45 @@
+---
+title: How to download an HTML5 canvas as an image using JavaScript
+date: '2022-03-17'
+categories: ["JavaScript", "HTML"]
+---
+
+After drawing to the canvas, you may want to download and save the canvas drawing as an image. To do this, you can use the `toDataURL()` method of the canvas object. 
+
+Suppose you have a button with id `downloadBtn`  in an HTML file:
+
+```html
+    <input type="button" id="downloadBtn" value="Download">
+```
+
+The download and save functionality will be handled within the following `downloadImage()` function, which can be added to your JavaScript file:
+
+```js
+function downloadImage() {
+
+    // Grab the canvas element
+    let canvas = document.getElementById("canvas");
+
+    /* Create a PNG image of the pixels drawn on the canvas using the toDataURL method. PNG is the preferred format since it is supported by all browsers
+    */
+    var dataURL = canvas.toDataURL("image/png");
+
+    // Create a dummy link text
+    var a = document.createElement('a');
+    // Set the link to the image so that when clicked, the image begins downloading
+    a.href = dataURL
+    // Specify the image filename
+    a.download = 'canvas-download.jpeg';
+    // Click on the link to set off download
+    a.click();
+}
+```
+
+Finally, we add a handler to call `downloadImage()` whenever the download button is clicked. 
+
+```js
+let download = document.getElementById('downloadBtn')
+download.addEventListener('click', downloadImage)
+```
+
+Note that some browsers won't let you save an image from the canvas if the code is running from a `file://` host. If your code does not work, try running it from `localhost://` or a hosted server. 

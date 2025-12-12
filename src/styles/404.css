@@ -1,0 +1,58 @@
+.page-404 {
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+    padding-top: 12rem;
+    color: #333;
+}
+
+.page-404 h1 {
+    margin:0;
+    color: var(--light-black);
+    text-shadow: 0.2vw 0.2vw 0px var(--secondary-color);
+    -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 1.1px;
+    -webkit-text-stroke-color: var(--light-black);
+    font-family: var(--secondary-font);
+    text-transform:uppercase;
+    font-size: 15rem;
+    letter-spacing: 0.1vw;
+    line-height: 12rem;
+    hyphens: auto;
+}
+
+.page-404 h3 {
+    text-transform: uppercase;
+    font-family: var(--secondary-font);
+    font-size: 2rem;
+    letter-spacing: 0.25rem;
+}
+
+.buttons-404 {
+    display: flex;
+    justify-content: center;
+}
+
+.buttons-404 .btn-work{
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    margin: 20px;
+}
+
+@media screen and (max-width: 600px) {
+
+    .page-404 h1 {
+        font-size: 10rem;
+    }
+  
+    .buttons-404 {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .buttons-404 .btn-work{
+        width: 100%;
+        justify-content: center;
+    }
+  }

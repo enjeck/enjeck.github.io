@@ -1,0 +1,402 @@
+---
+title: Learn HTML5 canvas by building an image watermarking tool
+date: '2022-03-15'
+categories: ["JavaScript", "HTML"]
+---
+
+HTML has come far from being just a markup language. The HTML5 canvas gives us the power to create and manipulate pixels, sort of like a painter working on a canvas. We can draw text and graphics onto the canvas using JavaScript. To demonstrate the power of the canvas and how to use its features, let's build an image watermarking tool that allows a user to upload an image and watermark it with text.   
+
+## Adding the canvas into a web page
+
+Before you begin, create a file called `index.html`. Here, we will write most of our code. 
+
+The HTML5 canvas can be added to a page just like any other element. It starts with an opening `<canvas>` tag and closes with `</canvas>`. Like other HTML elements, it can take attributes like `id` for identification, `width` to define the horizontal length in pixels, and `height` to define the vertical area of the page it occupies. 
+
+The canvas in the following code is 600 pixels wide and 600 pixels high. 
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Watermark</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <canvas id="canvas" width="600" height="600"></canvas>
+    </body>
+    <style>
+        canvas {
+            border: 1px solid #000;
+        }
+    </style>
+    <script>
+    </script>
+</html>
+```
+
+Go ahead and save the code as an HTML file and load it into a browser. 
+
+To see our canvas, we have given it a tiny black border, defined within the `style` tags. Without this border, a blank white page is shown and we won't know exactly where the canvas is. For now, we'll write JavaScript code between the `script` tags. 
+
+A page can have as many canvas elements as we like. Since the canvas is transparent, it can be placed on top of other elements. This allows us to draw on top of an image or something else. 
+
+Notice that we set the width and height of the canvas as an inline style on the element itself, and not as CSS styles within the `<style>` tag. That's because the `height` and `width` attributes work differently with the canvas, compared to other elements. The default dimension of the canvas is 300px by 150px -- it takes these values when the height and width HTML attributes are not explicitly set. If you later set the dimensions in CSS, say 600px by 600px, the canvas scales from its default size of 300 by 150 to fit this size, and everything drawn in the canvas scales with it. This might cause some pixelation issues (pixels get stretched and appear chunky), similar to what occurs when you resize a raster image. By making the canvas bigger (or smaller, if you prefer), anything drawn in it will be scaled to fit the specified dimensions. 
+
+## Drawing on the canvas
+
+Let's begin writing some JavaScript between our script tags:
+
+```js
+// Start drawing after the page is fully loaded. 
+     window.onload = function(){
+     // Get the canvas element, where we shall draw the background elements. 
+       const canvas = document.getElementById("canvas");
+       // To draw, we need to select a context for the canvas, 2d in this case, since we're drawing 2d items. 
+        const context = canvas.getContext("2d");
+     }
+
+```
+
+In the code above, we get the canvas element we had already created earlier. Before we can begin drawing on it, we must first set an interface by choosing a context. The context defines the set of properties and methods that can be used to draw on the canvas. Here, we are using a 2D context. As you might guess, the canvas supports other interfaces like 3d, which won't be covered in this tutorial.
+ 
+Some older browsers (e.g < Internet Explorer 9) do not support the canvas API. When a feature isn't supported, it's a good practice to show something else to a user, instead of letting them encounter a blank page. To check if the canvas exists, we can use `canvas.getContext()`.  
+
+```js
+  const canvas = document.getElementById("canvas");
+  if (canvas.getContext) {
+    // actual code
+  } else {
+    alert("Sorry, your browser does not support the canvas API. Please, update. ")
+  }
+``` 
+
+Using JavaScript to check for canvas support might be a bit of an overkill, depending on what you are trying to do. JavaScript's power comes into play when you want to provide users with a different experience (such as displaying another content or redirecting to another page) when there's no canvas support. 
+
+If you intend to just display some backup text when the canvas is not supported, it suffices to just use plain HTML. 
+
+When a supported element (such as text or image) is placed within the canvas element, it will be displayed if the canvas is not supported. By default, whenever a browser sees an element it does not recognize, it displays any text within the element. 
+
+```html
+<canvas id="canvas">
+No canvas support. Please upgrade. 
+</canvas>
+```
+ 
+With the code above, browsers without canvas support will display the text "No canvas support. Please upgrade", whereas, capable browsers ignore any text within the canvas tags and instead shows drawings generated via JavaScript. 
+
+## Drawing a basic shape
+
+Before we jump into the main watermarking application, let's test the canvas by drawing a simple shape.
+To draw a rectangle, we use the `fillRect()` method. It takes 4 arguments, corresponding to the _x position_, _y position_, _width_, and _height_. 
+
+```js
+<script>
+     window.onload = function(){
+       const canvas = document.getElementById("canvas");
+        let context = canvas.getContext("2d");
+         context.fillRect(0, 0, 100, 100)
+     }
+</script>
+```
+ 
+The code `context.fillRect(0, 0, 100, 100)` creates a rectangle starting from the top left, with dimensions 100 x 100 pixels. This rectangle is colored black, which is the default fill color for the canvas. 
+
+![](/filled-rect.png)
+
+To draw a rectangle with a stroke rather than fill, we would use the `strokeRect()` method rather than `fillRect()`. If you now load `index.html` in your browser, you should see something like this:
+ 
+ 
+Great, our canvas is up and running. We have tested it out, and it works. Go ahead and delete the `context.fillRect(0, 0, 100, 100)` code. We don't need it anymore. 
+
+
+## Building the app interface
+
+Before we begin implementing the watermarking app, let's consider its interface and features:
+
+- There is a canvas element, along with form elements that act as the user interface. 
+- The form will have input fields like a "browse" button to upload an image, a text input to enter the watermark text, select fields for choosing the text color, text size, text background, the position of text on the image, and a preview button.
+- We'll grab user input from the form and use it to draw on the canvas using JavaScript. 
+- The preview button will prompt JavaScript to retrieve user input and print data on canvas. 
+- Optionally, we can add a download button for saving the finished watermarked image. 
+ 
+To begin with, here's the HTML code:
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Watermark</title>
+        <meta charset="utf-8" />
+        <style>
+            canvas {
+              border: 1px solid black;
+              }
+        </style>
+    </head>
+    <body>
+       <h1> Watermarker </h1>
+        <canvas id="canvas" width="600" height="400">
+          <p> No canvas support. Please upgrade your browser. </p>
+        </canvas>
+        <form>
+            </form>
+
+            <script src="watermark.js"></script>
+    </body>
+</html>
+```
+
+We have moved our script code to a `watermark.js` file and linked it to it within the `<head>`. The canvas still has the fallback text for old browsers that do not support the canvas API. 
+ 
+Also, there is a `<form>` element containing controls that support the watermarking features. 
+
+Let's add the `<form>` data. This form serves as the user interface. 
+
+```html
+    <form>
+      <!-- Where the user selects an image -->
+      <p>
+        <label for="imageLoader" id="imageLoaderLabel">Choose an image:</label><br />
+        <input type="file" id="imageLoader" name="imageLoader" />
+      </p>
+
+      <!-- Where the user enters the text to be used as a watermark -->
+      <p>
+        <label for="watermarkText">Enter the text to use:</label><br />
+        <input type="text" id="watermarkText" name="watermarkText" />
+      </p>
+
+      <!-- Where the user  selects the position of the text on the image. Feel free to add more options-->
+      <p>
+        <label for="textPosition">Position of text:</label><br />
+        <select id="textPosition">
+          <option value="bottom-left">Bottom Left</option>
+          <option value="center"> Center </option>
+        </select>
+      </p>
+
+      <!-- Where the user  selects the color of the text on the image. Feel free to add more options-->
+      <p>
+        <label for="textColor">Color of text:</label><br />
+        <select id="textColor">
+          <option value="black">black</option>
+          <option value="blue">blue</option>
+          <option value="red">red</option>
+        </select>
+      </p>
+
+      <!-- Another selection control for choosing the font of the text. Feel free to add more options-->
+      <p>
+        <label for="textFont">Text font:</label><br />
+        <select id="textFont">
+          <option value="arial">Arial</option>
+          <option value="helvetica">Helvetica</option>
+          <option value="monospace">Monospace</option>
+        </select>
+      </p>
+
+      <!-- Another selection control for choosing the color of the text background. Feel free to add more options-->
+      <p>
+        <label for="textBgColor">Text background color:</label><br />
+        <select id="textBgColor">
+          <option value="black">black</option>
+          <option value="white">white</option>
+          <option value="transparent">transparent</option>
+        </select>
+      </p>
+
+      <!-- Buttons to preview or download the watermarked image -->
+
+      <input type="button" id="previewBtn" value="Preview">
+
+    </form>
+```
+
+![](/watermark-interface.png)
+
+We've dealt with the markup. Now, we can handle the script. 
+
+Let's start by writing code to load a selected image to the canvas when the "browse..." (`id = imageLoader`) button is clicked. 
+ 
+Add the following code into `watermark.js`:
+
+```js
+// Select the "browse" button, used to choose the image
+var imageLoader = document.getElementById('imageLoader');
+
+/* When the user selects an image, call the loadImage function */
+    imageLoader.addEventListener('change', loadImage, false);
+
+// Select the canvas and give it a 2d context 
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+```
+
+The event listener calls the `loadImage()` function, which is defined below. It reads the selected image using the `FileReader`object and draws it onto the canvas using `drawImage()`. 
+
+```js
+function loadImage(e){
+    // Read the selected image 
+    var reader = new FileReader();
+    reader.onload = function(event){
+        var img = new Image();
+        img.onload = function(){
+            /* Set the width and height of the canvas to
+             match the size of the chosen image */
+            canvas.width = img.width;
+            canvas.height = img.height;
+            // Draw the image on the canvas
+            ctx.drawImage(img,0,0);
+        }
+        img.src = event.target.result;
+        /* Delete the image loader with the prompt to "Choose an image" after an image is chosen */
+        document.getElementById('imageLoaderLabel').remove();
+    }
+    reader.readAsDataURL(e.target.files[0]);     
+}
+```
+
+If you visit `index.html` in a browser, you should be able to select an image and it will be loaded to the canvas.
+
+![](/load-image-watermark.png)
+
+Next, let's enable the "preview" (`id="previewBtn"`) button by making it call a JavaScript function when it is clicked. 
+
+```js
+window.onload = function() {
+    // Get the preview button element
+    var button = document.getElementById("previewBtn");
+    /* Add a click handler to the button so that
+    the previewImage function is called when clicked */
+    button.onclick = previewImage;
+    };
+```
+   
+Now, when the preview button is clicked, the `previewImage()` function is called. Within this function, we shall later add code to watermark the image loaded into the canvas. 
+
+Let's start writing the `previewImage()` function. For the most part, we will use the `fillText()` method. It takes four arguments, corresponding to the actual text, x position, y position, and optionally, the maximum width of the text). It fills the provided text at the (x, y) position of the canvas. The code `context.fillText("hello", 100, 100)` creates a text "hello" starting 100 pixels from the left and top.  
+
+```js
+function previewImage() {
+  // Select the canvas and give it a 2d context
+  let canvas = document.getElementById("canvas");
+  let ctx = canvas.getContext("2d");
+
+  /* Get the value of element with an id of "watermarkText" */
+  let wmText = document.getElementById("watermarkText").value;
+
+  /* If there's actually some text*/
+  if(wmText) {
+
+    /* Find out what options the user has chosen by 
+    getting the indices of the selected items */
+
+    // Get the selected text position 
+    let selectPos = document.getElementById("textPosition");
+    let posIndex = selectPos.selectedIndex;
+    let position = selectPos[posIndex].value;
+
+    // Get the selected text color
+    let selectCol = document.getElementById("textColor");
+    let colIndex = selectCol.selectedIndex;
+    let color = selectCol[colIndex].value;
+
+    // Get the selected text color 
+    let selectFont = document.getElementById("textFont");
+    let fontIndex = selectFont.selectedIndex;
+    let font = selectFont[fontIndex].value;
+
+    // Give text a size of 40px and assign it to the selected font
+    let textSize = 40
+    ctx.font = `${textSize}px ${font}`;
+
+    // Get the width and height of the canvas
+    let w = canvas.width;
+    let h = canvas.height;
+
+    // Get width of the text
+    let text = ctx.measureText(wmText);
+    let textWidth = text.width;
+
+    // Get the selected text background color 
+    let selectBgColor = document.getElementById("textBgColor");
+    let bgIndex = selectBgColor.selectedIndex;
+    let bgColor = selectBgColor[bgIndex].value;
+
+    /* Position the text on the image based on the selected position */
+    if (position == "center") {
+
+        // Color the background with the selected color using the fillStyle property
+        ctx.fillStyle = bgColor;
+        /* Draw the background using the fillStyle property. The x, y positions, width
+        and height are based on the width of the text */
+        ctx.fillRect(w/2 - textWidth/2, h/2-textSize, textWidth*1.2, textSize*1.5);
+        
+        // Fill the context (and text) with selected color
+         ctx.fillStyle = color;
+         // Draw the text using the fillText() method
+         ctx.fillText(wmText, w/2 - textWidth/2.3, h/2);
+    }
+
+    else if (position == "bottom-left") {
+        
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(w - (w - 2), h - textSize, textWidth*1.2, textSize*1.5);
+        // Fill context (and text) with selected color
+        ctx.fillStyle = color;
+        ctx.fillText(wmText, w - (w - 10), h - 10);
+    }
+  }
+}
+```
+
+With the above code, we're pretty much done. You can select an image, type some text into the interface, select colors and fonts. When you click "preview", the text will be drawn on the image using the selected properties. 
+
+![](/watermarked-image.png)
+
+Note that the `selectedIndex` property returns the index of the option currently selected in a dropdown. The list of options is converted to an array, and each element can be selected from the array using the index (0-indexed).
+
+The `fillText()` method accepts the text to draw on the canvas along with its x and y positions. There are various methods for setting the text font, size, and more. Just like with rectangles, we can set text stroke and fill using `fillText()` and `strokeText()` respectively. Both methods take four arguments: the text to draw, the x position, y position, and optionally, the max-width (forces the text to scale if it's wider than the provided max-width).
+
+The font of a piece of text is controlled via the context using `font` property. This property is set using the same format as in CSS. If we specify every property value, we'll set (in this order): font style, font weight, font size, and font family. For example:
+
+```js
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+ctx.font = "3em monospace";
+ctx.fillText("Hello, how are you?", 100, 50);
+ctx.font = "italic bold 2em serif";
+ctx.fillText("Hola, ¿cómo estás?", 100, 100);
+```
+
+The above code produces the following results:
+
+![](/font-test.png)
+
+The canvas does not have a direct way of creating text with a background. An easy workaround is to draw a rectangle and place it below the text, making it look like a background. 
+
+Let's take a closer look at `fillStyle`. It is a context property that holds the color of anything drawn on the canvas. It accepts color names (like red, black. green) and values like `#0000` or `rgb(0,0,0)`. 
+
+```js
+ctx.fillStyle = color;
+```
+
+Notice that since the text background and text color are usually different values, we have to set it multiple times. You might expect us to set the rectangle color and text color using the `fillRect()` and `fillText()` methods respectively, but this is not how the canvas works. Recall that the canvas context is just an object that controls how the canvas is used. With `fillStyle`, we tell the canvas that the subsequently drawn object(s) should use the specified color. After setting fillStyle, anything that can be filled with color (`fillRect()`, `fillText()`) will take on the last-specified `fillStyle` color. This color will be used until it is changed again via `fillStyle` to another color. 
+
+### Downloading an image from the canvas
+
+If you want to go further, you can [add download functionality](/blog/download-canvas-image) so that the watermarked image can be downloaded and saved to the user's device. This can be done using the `toDataURL()` method of the canvas object. 
+
+## Summary
+
+Here are the canvas basics we covered in this tutorial:
+- The canvas is an element that provides a drawing space on a web page
+- You specify the width and height of the canvas using the width and height attributes on the element
+- Everything drawn on the canvas is done using JavaScript
+- Before you can draw on the canvas, you must first create a context that provides a kind of interface (e.g 2D). 
+- To create a rectangle, use the context `fillRect()` method. This draws a rectangle filled with color. 
+- To create a rectangle outline, use `strokeRect()` method
+- to draw text in the canvas, use the `fillText()` method. You can specify the position, color, style, and other text properties using context properties. 
+- When you set a context property, such as `fillStyle`, it applied to every drawing that follows until you change the property to a different value.
+- To draw an image on the canvas, use the `drawImage()` method.  

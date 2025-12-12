@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="79.374962mm"
+   height="81.386177mm"
+   viewBox="0 0 79.374962 81.386177"
+   version="1.1"
+   id="svg6916"
+   inkscape:version="1.1 (1:1.1+202105261517+ce6663b3b7)"
+   sodipodi:docname="drawing-2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview6918"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.0633188"
+     inkscape:cx="240.28542"
+     inkscape:cy="307.99795"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
+     inkscape:window-x="72"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <sodipodi:guide
+       position="-54.179642,137.70722"
+       orientation="0,793.70079"
+       id="guide7011" />
+    <sodipodi:guide
+       position="155.82036,137.70722"
+       orientation="1122.5197,0"
+       id="guide7013" />
+    <sodipodi:guide
+       position="155.82036,-159.29279"
+       orientation="0,-793.70079"
+       id="guide7015" />
+    <sodipodi:guide
+       position="-54.179642,-159.29279"
+       orientation="-1122.5197,0"
+       id="guide7017" />
+  </sodipodi:namedview>
+  <defs
+     id="defs6913" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-54.17964,-56.32104)">
+    <path
+       id="path3878"
+       style="fill:#2a2a2a;fill-opacity:1;stroke:#2a2a2a;stroke-width:1.29701;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 54.828145,56.969545 v 27.060825 13.49796 19.51085 l 35.027284,20.01958 v -31.51122 h -13.49747 l -0.02157,8.01812 -8.011069,-4.54922 V 97.52833 H 89.855625 V 84.03037 H 68.325321 V 70.467506 h 8.035873 v 5.538658 H 89.855625 V 56.969545 H 68.325812 Z m 43.04747,4.9e-4 V 121.6532 137.05876 L 132.9029,117.03918 V 93.75187 l -13.49747,-5.188062 -0.0216,20.452632 -8.01107,4.54922 V 70.467506 h 8.03587 v 10.076116 l 13.49747,5.188062 V 56.970035 h -21.52981 z"
+       inkscape:export-filename="/home/cleo/Desktop/ec-logo.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>

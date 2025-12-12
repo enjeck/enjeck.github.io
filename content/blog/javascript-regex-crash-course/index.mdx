@@ -1,0 +1,315 @@
+---
+title: JavaScript regular expressions crash course
+date: '2022-02-24'
+categories: ["JavaScript"]
+---
+
+Regular expressions are a method to describe patterns in string data. Regular expressions form a tiny, separate language part of many languages, including JavaScript. 
+
+Admittedly, regular expressions have a cryptic syntax and are often difficult to write. Knowing how to write them does come in handy in the real world, especially when processing and inspecting strings. 
+
+### Creating a regular expression
+
+In JavaScript, a regular expression is an object, constructed with either the `RegExp` constructor or with forward slash (`/`) characters enclosing a pattern as a value (literal notation). 
+
+```js
+let regExpres1 = new RegExp("xyz");
+let regExpres2 = /xyz/
+```
+
+Both of the above regular expression objects represent a pattern of a character _x_ followed by a _b_ character followed by a _c_. 
+
+When creating a regular expression using the RegExp constructor, the pattern is written like a normal string. Here, backslashes can be used as usual.
+Whereas, regular expressions defined using the literal notation deal with backslashes differently. A forward slash denotes the start and the end of the pattern, so we have to place a backslash before any forward slash that we want to be part of the pattern. If a backslash is not part of a special character (such as `\n`, `\t`), it is _preserved_ instead of ignored (treated as a string) and will therefore change the meaning of the pattern. 
+
+### Handling special characters
+
+Characters like plus signs (`+`) and question marks (`?`) have special meanings in regular expressions and need to be preceded by a backslash if you want to indicate the character itself. 
+
+```js
+let helloQuestion = /hello\?/
+```
+
+### Checking for a match
+
+Like "normal" objects, regular expressions have methods. The most common method is `test()`, which accepts a string and returns a Boolean that tells you whether the string matches the pattern in the expression. 
+
+```js
+console.log(/xyz/.test("abcxyz"));
+// → true
+console.log(/xyz/.test("axyzbc"));
+// → true
+console.log(/xyz/.test("uvwxzya"));
+// → false
+```
+
+When there are no special characters, a group of characters represents that sequence of characters. In the example above, we are testing if _xyz_ occurs anywhere in the string. This is a rather simple test that can easily be replicated using indexOf. Regular expressions are not made for such simple cases. Their power lies in their ability to allow us to express complex patterns, as you will see below.
+
+
+### Matching complex patterns
+
+####  Sets of characters
+Suppose we want to match a set of characters, say, any Latin letter. Placing a set of characters between square brackets matches that part of the regular expression to any of the characters within the brackets. 
+
+```js
+console.log(/[abcdefghijklmnopqrstuvwxyz]/.test("year 2021"));
+// → true
+```
+
+#### Ranges of characters
+The above expression matches all strings that contain lowercase Latin letters. We can make the expression shorter by using a hyphen (`-`). A hyphen between two characters between square brackets represents a range of characters. 
+
+```js
+console.log(/[a-z]/.test("year 2021"));
+// → true
+```
+
+We can similarly test for numbers:
+
+```js
+console.log(/[0123456789]/.test("year 2021"));
+// → true
+console.log(/[0-9]/.test("year 2021"));
+// → true
+```
+
+For a range of characters indicated with a hyphen, the ordering of the characters is determined by their Unicode number. For example, characters _a-z_ (codes 97-122) are next to each in the Unicode ordering, and so using range `[a-z]` includes every character in this range and matches all lowercase Latin letters.
+
+#### Character groups shorthand
+
+In regular expressions, character sets/groups have a built-in shorthand for writing them. Digits (`[0-9]`) can be represented as `\d`. Here are some common character sets and their shorthand codes:
+
+| Character  | Purpose|
+| ----------| ------------------------------------------------------ |
+| \d        | A digit character                                      |
+| \D  | A character that is not a digit |
+| \w  | An alphanumeric character (“word character”)| 
+| \W  | A nonalphanumeric character | 
+| \s  | Any whitespace character (space, tab, newline, and similar) |
+| \S  | Any character except for newline | 
+
+If we want to match a phone number with format `XXX-XXX-XXXX`, here's how we can do it:
+
+```js
+let phoneNum = /\d\d\d-\d\d\d-\d\d\d\d/
+console.log(phoneNum.test("202-588-6500"));
+// → true
+console.log(phoneNum.test("67-500-647"));
+// → false
+```
+#### Special characters
+
+These shorthand codes can also be used within square brackets to indicate a set of characters. For example, `[\d]` represents any digit. When special characters like the period (`.`) and the plus (`+`) are used between square brackets, they lose their special meaning. So, `[.+]` matches any period or plus character. 
+
+#### Exclude characters
+
+The caret (`^`) character lets you invert a set of characters. That is, it matches any character except the character(s) in the given set. 
+
+```js
+let notNumber = /[^\d]/;
+console.log(notNumber.test("ujdhf345kd"));
+// → true
+console.log(notNumber.test("3453"));
+// → false
+```
+
+#### Repeated patterns
+
+Let's revisit the phone number matching code from earlier. The code works. But it looks very clunky and awkward to write. There are too many `\d`'s, which make it difficult to see the pattern we are trying to represent. To match repeating parts of a pattern, such as a sequence of digits, we use the plus sign (`+`). When the plus sign follows a character or group of characters, this indicates that the character(s) may be repeated more than once. For example, the expression `/\d+/` matches one or more digit characters. So, we can shorten our phone number matching code to:
+
+
+```js
+let phoneNum = /\d+-\d+-\d+/
+console.log(phoneNum.test("202-588-6500"));
+// → true
+console.log(phoneNum.test("67-500-647"));
+// → true
+```
+
+The plus symbol matches a pattern at least once. To allow a match of zero or more times, we use the asterisk (`*`). Note that the asterisk does not stop a pattern from matching -- it just matches zero instances if the pattern does not exist. 
+
+
+```js
+console.log(/'\d*'/.test("'890'"));
+// → true
+console.log(/'\d*'/.test("''"));
+// → true
+```
+
+The previous phone number code is much more concise, but it also matches other formats in addition to the `XXX-XXX-XXXX` format we expect it to. That's because `/\d+/` matches any number of digits. 
+
+To specify the number of times a pattern should occur, we use numbers within braces after an element. For example, using `{3}` after an element specifies that the element should occur exactly three times. We can also specify a range by separating two numbers with a comma. `{3, 5}` indicates that the element should occur at least thrice and at most five times. We can specify open-ended ranges by omitting a second number after the comma. So, `{3,}` means three or more times. 
+
+Here's another modification of our phone number verification code:
+
+```js
+let phoneNum = /\d{3}-\d{3}-\d{4}/
+console.log(phoneNum.test("202-588-6500"));
+// → true
+console.log(phoneNum.test("67-500-647"));
+// → false
+```
+
+#### Optional characters
+
+Phone numbers are usually valid even when they are not hyphenated. We can make the hyphen optional. To make a part of a pattern optional, we use the question mark (`?`). It allows a character to occur zero or one number of times. 
+
+
+```js
+let phoneNum = /\d{3}-?\d{3}-?\d{4}/
+console.log(phoneNum.test("202-588-6500"));
+// → true
+console.log(phoneNum.test("2025886500"));
+// → true
+```
+
+In the above example, the pattern matches even when the hyphen character (`-`) is omitted. 
+
+#### Group characters
+
+We enclose multiple elements within parentheses `()` to treat them as a single element when using operators like `+` or `*`. When a part of a regular expression is surrounded by parentheses, it is treated as a single element by any operations following it. Below, the `+` applies to the group `ho` and it matches one or more sequences like it.
+
+
+```js
+let santaLaugh = /(ho)+/i;
+console.log(santaLaugh.test("hohohoho"));
+// → true
+```
+
+#### Case sensitivity
+
+The `i` character at the end of the expression makes the regular expression case-insensitive. The code below matches the uppercase `H` in the input string, even though the actual pattern is all lowercase. 
+
+```js
+let santaLaugh = /(ho)+/i;
+console.log(santaLaugh.test("Hohohoho"));
+// → true
+```
+
+#### Matching within boundaries
+
+To make a matching span through an entire string, we use the `^` and `$` characters. The dollar sign matches the end of the input string, while the caret matches the start. The expression `/^\d+$/` matches a string that is made up of numbers from start to end. `/^a/` matches a string that starts with the letter `a`, and `/!$/` matches a string that ends with an exclamation mark. 
+
+The marker `\b` refers to a word boundary, which can be the start or end of the string. It can also refer to any place in the string that has a word character on one side and a non-word character on the other side. 
+
+```js
+console.log(/pp/.test("happy"));
+// → true
+console.log(/\bpp\b/.test("happy"));
+// → false
+```
+
+A boundary marker matches an expression only when a specific condition holds at the point it exists in the pattern. It does not match an actual character. 
+
+We use the pipe character `(|)` to indicate a choice between a pattern to its left and that to its right. For example, we can match a text that contains the word "watch" in either its plural (ending with "es") form, past tense (ending with "ed"), or personal noun (ending with "er") form. 
+
+```js
+let word = /\b\watch(es|ed|er)?\b/;
+console.log(word.test("watch"));
+// → true
+console.log(word.test("watched"));
+// → true
+console.log(word.test("watcherrr"));
+// → false
+```
+
+In the above example, we use parentheses to limit the section of the expression that the pipe operator should be applied to. 
+
+### Other methods for matching
+
+Unlike the `test()` method that returns only true or false depending on whether or not the pattern matched, the `exec()` (execute) method returns an object with information about the match if a match is found and it returns `null` otherwise. 
+
+```js
+let execMatch = /\d+/.exec("abc 123");
+console.log(execMatch);
+// → Array [ "123" ]
+console.log(execMatch.index);
+// → 4
+
+let execMatch2 = /\d+/.exec("abc");
+console.log(execMatch2);
+// → null
+```
+
+When we log `execMatch`, we see an array whose first element is a sequence of the successful match. `exec()` has an `index` property that tells us the position where the successful match begins. 
+
+The `match()` method for strings behaves like `exec()`:
+
+```js
+console.log("abc 123".match(/\d+/));
+// → Array [ "123" ]
+```
+
+If the regular expression has subexpressions within parentheses, any text matching these subexpressions will be shown in the array. The first element of the array is always the whole match. The next element, if it exists, is the part matched by the first subexpression -- that is, the subexpression whose opening parentheses appear first in the expression -- then the second expression, and so on.
+
+```js
+let quoted = /'([^']*)'/
+console.log(quoted.exec("I said 'yes' to his proposal"));
+// → Array [ "'yes'", "yes" ]
+```
+
+When a subexpression grouped in parentheses does not have a match in the input string (for example, when the subexpression is followed by a question mark), the value `undefined` is returned in its place in the output array. 
+
+```js
+console.log(/program(mer)?/.exec("program"));
+// → Array [ "program", undefined ]
+console.log(/(\w)+/.exec("abc"));
+// → Array [ "abc", "c" ]
+```
+
+### Matching and replacing
+
+The replace method can be used on strings to replace part of a string with another string. For example:
+
+```js
+console.log("haha".replace("a", "e"));
+// → heha
+```
+
+The first argument of the `replace()` method can be a regular expression. Here, the first match of the regular expression is replaced. To replace all matches in a string rather than just the first, add the `g` (global) option to the regular expression. 
+
+```js
+console.log("hahehahehe".replace(/a/, "e"));
+// → hehehahehe
+console.log("hahehahehe".replace(/a/g, "e"));
+// → hehehehehe
+```
+
+The above behavior of replacing all matches in a string can be replicated using JavaScript's `replaceAll()` method without having to use regular expressions at all. The advantage of using regular expressions with the `replace()` method is that we can mention matched subexpression groups. For example, say we a string with two numbers `2 3` and we want to swap their positions to say `3 2` instead:
+
+```js
+console.log("2 3".replace(/(\w+) (\w+)/g, "$2 $1"));
+// → 3 2
+```
+
+In the above code, the groups `(\w+)` and `(\w+)` are associated with the characters `$1` and `$2` in the replacement string. `$1` is replaced by the text matching the first group, `$2` by the second group. The entire match can be referenced with `$&`. 
+
+Instead of a string, we may decide to pass a function as the second argument of the `replace()` method. For each replacement, the function is called with the matched subexpression groups as arguments, and then the return value is added to the new string. The following code accepts a function as a second argument and converts specific strings to uppercase:
+
+```js
+let phrase = "unicef is a humanitarian ngo.";
+let re = phrase.replace(/\b(unicef|ngo)\b/g, word => word.toUpperCase())
+console.log(re);
+// → UNICEF is a humanitarian NGO.
+```
+
+### Regex constructor VS literal notation
+
+When writing your code, you may not know the actual pattern you are expected to match. In this case, you can dynamically create RegExp objects. Suppose you want to look for a particular word in a sentence and surround it with quotation marks. Since this word will only be known during program execution, it is better to use the `RegExp` constructor rather than literal notation. 
+
+```js
+let word = "hello";
+let sentence = "Mary says hello.";
+let re = new RegExp("\\b(" + word + ")\\b", "i");
+console.log(sentence.replace(re, "'$1'"));
+// → Mary says 'hello'.
+```
+
+Notice that because we are writing the `\b` boundary markers as a regular string, we use two backslashes when creating the `\b` boundary marker in the `RegExp` constructor. The second argument given to the `RegExp` constructor holds the options for the regular expression, such as `i` for case-insensitivity in this example. 
+
+The `indexOf()` string method is usually used to get the position of a character or group of characters in a string. Its main drawback is it does not accept regular expressions. To use regular expressions to determine the index of a character, the `search()` method comes in handy. 
+
+```js
+console.log("year 2021".search(/\d/));
+// → 5
+```

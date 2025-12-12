@@ -1,0 +1,143 @@
+---
+title: How to get a someone's location using the Geolocation API
+date: '2021-09-25'
+categories: ["html", "javascript"]
+---
+
+Knowing a user's location can be a very important feature of a web app. 
+You can use the location information to personalise the user experience,
+give users directions, suggest friends or events in a person's locality, or to
+power a particular feature. 
+
+Whenever you want to build web pages that are location-aware, 
+JavaScript's Geolocation API is great tool. If the user permits 
+(the user give the browser permission to access their location), you can pinpoint 
+their city, or even more precisely, the street they live in.
+
+Don't confuse the Geolocation API with Google Maps. 
+They are different in many ways. Google Maps API is a library that provides access 
+to Google Maps features like displaying location in a map, or giving directions. 
+Whereas, the Geolocation API's primary purpose is to give information about a person's 
+position on Earth. 
+
+### How the Geolocation API works
+
+To get a person's location, the Geolocation API relies on latitudes and longitudes making a coordinate system. 
+Latitudes and longitudes are imaginary lines (you'll see them drawn on globes) that cover 
+the earth and help with positioning. Latitudes indicate northern/southern points on the 
+Earth, and longitude eastern/western. Every place on Earth has a longitude/latitude value 
+corresponding to its position on planet Earth. For example, New York City is somewhere around 
+latitude 40 and longitude -70.
+
+Not only smartphones are location-aware. 
+Nowadays, almost every eleectronic device can be made location-aware, even a desktop computer. 
+You may be wondering how a browser running on a desktop computer can determine its location 
+when it doesn't have a GPS. Browsers have other ways of  finding location without the use of 
+location technologies like GPS.
+
+- **GPS (Global Positioning System)**: Mainly used by modern mobile devices, it can provide
+high-accuracy location information. It uses satellites and can also provide information on altitude and wind speed. 
+- **IP Address**: Every device on the internet has an IP Address. This IP can be mapped to an 
+external database to derive a person's physical location. This method can work anywhere, 
+but is is not very accurate. 
+- **Cell phone triangulation**: This approach uses your distance from cell phone towers to 
+calculate your location. It is pretty accurate, and has the advantage of working indoors, 
+unlike GPS. 
+- **WiFi**: Wi-Fi positioning is based on using access points to triangulate location. 
+It is accurate, fast and can work indoors. 
+
+When building basic geolocation web apps, you don't have to concern yourself with all these 
+various geolocation tactics. Different browsers handle it in their own way. 
+
+Let's begin using the Geolocation API. We'll try to find out where you are (or at least, where your 
+browser thinks you are). 
+
+Save the following starter HTML code in a file. 
+
+```html
+<!doctype html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <title>My Location</title>
+    <script src="location.js"></script>
+    <link rel="stylesheet" href="myLoc.css">
+  </head>
+  <body>
+    <div id="location">
+    </div>
+  </body>
+  </html>
+```
+
+Go ahead a create `location.js` file, inside of which we will write the actual Geolocation code:
+
+```js
+/* Call the function after the page is done loading. */
+window.onload = myLocation;
+
+function myLocation() {
+
+/* Check if the browser supports the Geolocation API. If it does, then 
+the geolocation property exists, and the condition evaluates to true. The 
+navigator.geolocation property is an object that contains the whole geolocation API */
+  if (navigator.geolocation){
+    /* Call the getCurrentPosition method and pass it a function, showLocation, which 
+    we shall soon implement. An API is basically an object with properties and methods. 
+    The Geolocation API has the getCurrentPosition method, which handles the job of getting 
+    the browser's location.*/ 
+    navigator.geolocation.getCurrentPosition(showLocation);
+  }
+  else {
+    // If there's no geolocation support, show an alert
+    alert("Sorry, your browser does not support geolocation."); 
+  }
+}
+
+/* This function is passed a position, containing latitude and longitude values */
+function showLocation(position){ 
+/* Get the latitude and longitude from the position.coords object */
+const latitude = position.coords.latitude;
+const.longitude = position.coords.longitude;
+// Show the location on the page
+document.getElementById("location").innerHTML = 
+"You are at Latitude: " + latitude +  ", Longitude: " + longitude;
+}
+```
+
+When you run this code (or any other code using the Geolocation API) for the first time, 
+the browser requests to access your permission. This security check is for privacy reasons, 
+preventing a malicious app from accessing your location without the user's permission. 
+
+That's it. We're done with  getting the user's location. 
+
+### A bit more about the getCurrentPostion() method
+
+Although not shown in the previous code, the `getCurrentPostion` method can take three parameters. 
+The last two parameters are optional:
+
+```
+getCurrentPosition(successHandler, errorHandler, options);
+```
+
+- The `successHandler` function is called if the browser successfully gets your location. 
+- `errorHandler` isIt accepts parameters `enableHighAccuracy`, `timeout` (the maximum time the browser can 
+take to determine its location), `maximumAge` (the oldest age a location value can reach, after 
+which, the browser needs always recalculate the location 
+whenever getCurrentPostion is called. called if the browser can't determine your location. 
+- The `options` parameter is used for controlling how the geolocation computes its value.  
+
+In the previous example, we called the geolocation object's `getCurrentPosition` method with 
+an a success handler (`showLocation`) function. When our success handler, `showLocation`, 
+is called, it is passed a `position` object containing a coordinates object holding the 
+longitude and latitude, as well as other information about the browser's location. 
+The `position` object has a `coords` property, which can be used to reference the 
+latitudes and longitudes. 
+
+It works like this: 
+1. First, the browser call `getCurrentPostion`, which triggers the geolocation API 
+to ask the user for permission to access location. 
+2. If the user accepts, geolocation attempts to get the browser's location 
+(via means such as GPS, triangulation, etc discussed earlier), and if successful, it calls 
+the success handler (`showLocation`, in the example), and passes it an object with the 
+coordinates. 
