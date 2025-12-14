@@ -6,9 +6,7 @@ categories: ["math", "javascript"]
 
 Inspired by my own challenges with weight fluctuations, I wanted to explore how people's weight might change based on calorie consumption. This article details how I went about modelling weight change with differential equations, and building a web application around this model. With the web app, users can enter personal information and see how their weight might change per month over time. This data will be visualized using a table and a line graph.
 
-Here is the [final website](https://enjeck.com/weight-change-prediction/).
-
-View the code on [GitHub](https://github.com/enjeck/weight-change-prediction).
+Here is the [final website](https://enjeck.com/weight-change-prediction/) and the [code on GitHub](https://github.com/enjeck/weight-change-prediction).
 
 ## The mathematical model
 
@@ -262,7 +260,7 @@ $$
 w(365) = 60.5
 $$
 
-So, after 1 year, this woman's weight has dropped from 80kg to 60.5kg. Losing 19.5kg over a year is a pretty realistic prediction. After 2 years, her weight should be 50kg, a difference of 10kg from the first year's loss. As you can see, as she loses weight over time, the rate of weight loss slows down. This is how it goes in real life.
+So, after 1 year, this woman's weight has dropped from 80kg to 60.5kg. Losing 19.5kg over a year is a realistic prediction. After 2 years, her weight should be 50kg, a difference of 10kg from the first year's loss. As you can see, as she loses weight over time, the rate of weight loss slows down.
 
 ## The code
 
@@ -488,7 +486,7 @@ When the user submits the form (by clicking the "Predict" button), we intend to 
 
 ```js
 // Prevent the page from reloading when form is submitted
-var form = document.getElementById("form");
+const form = document.getElementById("form");
 function handleForm(event) {
   event.preventDefault();
 }
@@ -678,7 +676,7 @@ height = Math.max(width, 600);
 
 // append the svg object to the body of the page
 document.getElementById("line-chart").innerHTML = "";
-var svg = d3
+const svg = d3
   .select("#line-chart")
   .append("svg")
   .attr("width", width)
@@ -687,7 +685,7 @@ var svg = d3
 let lastEl = weightTime[weightTime.length - 1];
 
 // Calculate the axis values
-var xScale = d3
+const xScale = d3
     .scaleLinear()
     .domain([0, lastEl.time + 1])
     .range([0, width / 1.2]),
@@ -699,7 +697,7 @@ var xScale = d3
     ])
     .range([height / 1.2, 0]);
 
-var g = svg.append("g").attr("transform", "translate(" + 50 + "," + 50 + ")");
+const g = svg.append("g").attr("transform", "translate(" + 50 + "," + 50 + ")");
 
 // X-axis label
 svg
@@ -747,7 +745,7 @@ svg
   .style("fill", textColor);
 
 // Line
-var line = d3
+const line = d3
   .line()
   .x(function (d) {
     return xScale(d.time);
@@ -772,12 +770,12 @@ Finally, after the table and line chart are built and added to the page, let's a
 
 ```js
 // Automatically scroll to the output area after it is output generated
-let anchor = document.createElement("a");
+const anchor = document.createElement("a");
 anchor.setAttribute("href", "#output");
 anchor.click();
 
 // Show hidden text in output area
-let hiddenText = document.querySelectorAll(".output-text");
+const hiddenText = document.querySelectorAll(".output-text");
 for (let m = 0; m < hiddenText.length; m++) {
   hiddenText[m].style.display = "block";
 }

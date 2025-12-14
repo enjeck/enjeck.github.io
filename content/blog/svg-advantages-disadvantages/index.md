@@ -17,11 +17,11 @@ SVG files are based on XML (extensible markup language), a set of codes that des
 
 **2. Scalable**
 
-Raster formats like PNG and JPG become pixilated when resized. Since SVG images are vector images, they do not suffer from loss of quality when resized or zoomed in the browser. This makes them suitable in case where an image has to be scaled to fit different screen sizes. 
+Raster formats like PNG and JPG become pixelated when resized. Since SVG images are vector images, they do not suffer from loss of quality when resized or zoomed in the browser. This makes them suitable in cases where an image has to be scaled to fit different screen sizes. 
 
 SVG graphics are resolution-independent. Other image formats may require extra assets/data to fix resolution-based issues, depending on the device. For example, in retina screens, a @2x hack is required to display higher-resolution images. SVG doesn’t have such hassles and can be resized easily no matter the device or resolution.
 
-Below, you can see the same image when scaled in different formats. In SVG, the image retains its quality. When scaled in PNG, the image losses its quality and becomes pixilated.
+Below, you can see the same image when scaled in different formats. In SVG, the image retains its quality. When scaled in PNG, the image loses its quality and becomes pixelated.
 
 ![Vector vs Raster](./vector_vs_raster.png)
 
@@ -41,7 +41,7 @@ Compared to other formats, SVG images are very small in size. A PNG image can be
 
 SVG files can be indexed by search engines. This means that they can be used  for SEO (Search Engine Optimization) purposes.
 
-**7. Compressable**
+**7. Compressible**
 
 Like other image formats, SVG files can be scripted and compressed.
 
@@ -57,6 +57,6 @@ The SVG image format is great for 2D graphics like logos and icons but is not id
 
 **2. Not fully cross-platform**
 
-Even though SVG has been around since 1999 and is supported by most modern browsers (both on desktop and mobile), it does not work on legacy browsers like IE8 and below. According to [caniuse.com](https://caniuse.com/#search=svg), about 5% of internet users surf the web with the browser that doesn’t support SVG. Therefore, by using SVG, you may miss out on 1 in 20 users who could be viewing your content. 
+Even though SVG has been around since 1999 and is supported by most modern browsers (both on desktop and mobile), it does not work on legacy browsers (like IE8 and below). However, this is rarely an issue for modern web development as the vast majority of users are on browsers that support SVG. 
 
 ![SVG Browser Compatibility chart](./SVG-browser-compatibility-chart-1024x461.png)

@@ -15,18 +15,18 @@ Here are some tips to help you write clearly:
 - Use technical terms sparsely, and when you do, add a short definition or description. The reader might not know the service or product you are writing about. Do not assume they do. Before writing UX text, it helps to list and define the terms to use and those to avoid (such as terms that are difficult to understand, sensitive, or confusing). For example, instead of writing  "Connection error, server unreachable", you might say "You are offline. Check your internet connection and retry". 
 
 ### 2) Be concise
-Paradoxically, it usually takes more time to write a shorter statement than a longer one because it is harder to condense important details into a shorter statement. When working on devices with small screens such as mobile applications, there is not a lot of screen space. You, therefore, have to try to fit as much value into the little available space. Here's how to do this:
-- Find a way to express concepts more succinctly. 
-- Use shorter sentences. 
-- Write the important stuff at the beginning of the paragraph so that it is read first.
-- After writing each sentence, read through it and check if there's anything you can delete without messing up the meaning of the phrase. For example, instead of saying "Connection error, the server is unreachable. You are offline. Check your internet connection.", you might say "No internet".
+Writing a shorter statement often takes more time than a longer one because condensing information is hard. On small screens, space is limited, so you must maximize value. 
+- Express concepts succinctly. 
+- Use short sentences. 
+- Place important information at the beginning.
+- Delete unnecessary words without losing meaning. For example, instead of "Connection error, the server is unreachable. You are offline.", say "No internet".
 
 ### 3) Be consistent
 UX text is meant to assist, not confuse. The navigation and other components of a digital product should be consistent. Not just consistent design (colors, layout, etc) but consistent text. Consistency is harder to achieve when many people are working on an application (such as in open-source software) or when there are several pages. To maintain textual consistency:
-- Make a list of all key terms, define them, and ensure they are used consistently across all pages of the app. For open-source projects, keep this list in a public document that is accessible to contributors. 
-- Document colors and fonts that should be used 
-- Don't make the user think. Instead of using unique phrases, it might be better to give readers a familiar experience. Instead of writing "Reach out" or "Let's talk", you could stick with "Contact Us", since it's widely used and the users immediately understand what you mean. 
-- Do not use many synonyms throughout the product to express the same concept. For instance, if you decide to use "Contact Us", stick with it. Avoid using similar words like "Supports", "Reach out", "Get Help" to refer to the same concept. 
+- Make a list of all key terms, define them, and ensure they are used consistently.
+- Document colors and fonts.
+- Don't make the user think. Use familiar phrases like "Contact Us" instead of "Reach out".
+- Avoid using synonyms for the same concept. If you choose "Contact Us", stick with it. Don't mix it with "Get Help" or "Support". 
 
 ### 4) Be helpful
 If you're trying to guide people, do it properly. The navigation and other components should be smooth and self-explanatory. 

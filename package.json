@@ -19,7 +19,6 @@
     "react": "19.2.1",
     "react-burger-menu": "^3.1.0",
     "react-dom": "19.2.1",
-    "react-fast-marquee": "^1.6.5",
     "rehype-katex": "^7.0.1",
     "rehype-prism-plus": "^2.0.1",
     "remark-gfm": "^4.0.1",
@@ -33,6 +32,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "gh-pages": "^6.3.0"
   }
 }
