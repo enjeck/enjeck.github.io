@@ -1,0 +1,1874 @@
+1:"$Sreact.fragment"
+2:I[48249,["/_next/static/chunks/b42444546cf1924e.js","/_next/static/chunks/8578e6e2b7d87452.js"],"default"]
+3:I[23288,["/_next/static/chunks/b42444546cf1924e.js","/_next/static/chunks/8578e6e2b7d87452.js"],"default"]
+4:I[37667,["/_next/static/chunks/0b32bff5a2dff718.js"],""]
+5:I[73235,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/1b66c0a83b60540d.js"],"default"]
+6:I[8242,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/1b66c0a83b60540d.js"],"default"]
+13:I[30556,[],"default"]
+:HL["/_next/static/chunks/e5da751912c10467.css","style"]
+:HL["/_next/static/chunks/e2fae31b48403321.css","style"]
+:HL["/_next/static/chunks/69ef5a39cc4d8dfb.css","style"]
+:HL["https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css","style"]
+7:T57f,
+After drawing to the canvas, you may want to download and save the canvas drawing as an image. To do this, you can use the `toDataURL()` method of the canvas object. 
+
+Let's say you have a "Download" button in your HTML:
+
+```html
+    <input type="button" id="downloadBtn" value="Download">
+```
+
+The download and save functionality will be handled within the following `downloadImage()` function, which can be added to your JavaScript file:
+
+```js
+function downloadImage() {
+
+    // Grab the canvas element
+    let canvas = document.getElementById("canvas");
+
+    // Create a PNG image of the pixels drawn on the canvas using the toDataURL method.
+    var dataURL = canvas.toDataURL("image/png");
+
+    // Create a dummy link text
+    var a = document.createElement('a');
+    // Set the link to the image so that when clicked, the image begins downloading
+    a.href = dataURL
+    // Specify the image filename
+    a.download = 'canvas-download.jpeg';
+    // Click on the link to set off download
+    a.click();
+}
+```
+
+Finally, we add a handler to call `downloadImage()` whenever the download button is clicked. 
+
+```js
+let download = document.getElementById('downloadBtn')
+download.addEventListener('click', downloadImage)
+```
+
+Note that some browsers won't let you save an image from the canvas if the code is running from a `file://` host. If your code does not work, try running it from a local server. 
+8:T46e0,
+HTML5 canvas allows us to create and manipulate pixels, just like a painter working on a canvas. We can draw text and graphics onto the canvas using JavaScript. To demonstrate its power, let's build an image watermarking tool that allows a user to upload an image and watermark it with text.   
+
+## Adding the canvas into a web page
+
+Before you begin, create a file called `index.html`. Here, we will write most of our code. 
+
+The HTML5 canvas can be added to a page just like any other element. It starts with an opening `<canvas>` tag and closes with `</canvas>`. Like other HTML elements, it can take attributes like `id` for identification, `width` to define the horizontal length in pixels, and `height` to define the vertical area of the page it occupies. 
+
+The canvas in the following code is 600 pixels wide and 600 pixels high. 
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Watermark</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <canvas id="canvas" width="600" height="600"></canvas>
+    </body>
+    <style>
+        canvas {
+            border: 1px solid #000;
+        }
+    </style>
+    <script>
+    </script>
+</html>
+```
+
+Go ahead and save the code as an HTML file and load it into a browser. 
+
+To see our canvas, we have given it a tiny black border, defined within the `style` tags. Without this border, a blank white page is shown and we won't know exactly where the canvas is. For now, we'll write JavaScript code between the `script` tags. 
+
+A page can have as many canvas elements as we like. Since the canvas is transparent, it can be placed on top of other elements. This allows us to draw on top of an image or something else. 
+
+Notice that we set the width and height of the canvas as an inline style on the element itself, and not as CSS styles within the `<style>` tag. That's because the `height` and `width` attributes work differently with the canvas, compared to other elements. The default dimension of the canvas is 300px by 150px -- it takes these values when the height and width HTML attributes are not explicitly set. If you later set the dimensions in CSS, say 600px by 600px, the canvas scales from its default size of 300 by 150 to fit this size, and everything drawn in the canvas scales with it. This might cause some pixelation issues (pixels get stretched and appear chunky), similar to what occurs when you resize a raster image. By making the canvas bigger (or smaller, if you prefer), anything drawn in it will be scaled to fit the specified dimensions. 
+
+## Drawing on the canvas
+
+Let's begin writing some JavaScript between our script tags:
+
+```js
+// Start drawing after the page is fully loaded. 
+     window.onload = function(){
+     // Get the canvas element, where we shall draw the background elements. 
+       const canvas = document.getElementById("canvas");
+       // To draw, we need to select a context for the canvas, 2d in this case, since we're drawing 2d items. 
+        const context = canvas.getContext("2d");
+     }
+
+```
+
+In the code above, we get the canvas element we created. Before we can draw, we must set an interface by getting a context. The context defines the properties and methods used to draw on the canvas. Here, we use a 2D context. 
+
+Using JavaScript to check for canvas support might be a bit of an overkill, depending on what you are trying to do. JavaScript's power comes into play when you want to provide users with a different experience (such as displaying another content or redirecting to another page) when there's no canvas support. 
+
+If you intend to just display some backup text when the canvas is not supported, it suffices to just use plain HTML. 
+
+When a supported element (such as text or image) is placed within the canvas element, it will be displayed if the canvas is not supported. By default, whenever a browser sees an element it does not recognize, it displays any text within the element. 
+
+```html
+<canvas id="canvas">
+No canvas support. Please upgrade. 
+</canvas>
+```
+ 
+With the code above, browsers without canvas support will display the text "No canvas support. Please upgrade", whereas, capable browsers ignore any text within the canvas tags and instead shows drawings generated via JavaScript. 
+
+## Drawing a basic shape
+
+Before we jump into the main watermarking application, let's test the canvas by drawing a simple shape.
+To draw a rectangle, we use the `fillRect()` method. It takes 4 arguments, corresponding to the _x position_, _y position_, _width_, and _height_. 
+
+```js
+<script>
+     window.onload = function(){
+       const canvas = document.getElementById("canvas");
+        let context = canvas.getContext("2d");
+         context.fillRect(0, 0, 100, 100)
+     }
+</script>
+```
+ 
+The code `context.fillRect(0, 0, 100, 100)` creates a rectangle starting from the top left, with dimensions 100 x 100 pixels. This rectangle is colored black, which is the default fill color for the canvas. 
+
+![](/filled-rect.png)
+
+To draw a rectangle with a stroke rather than fill, we would use the `strokeRect()` method rather than `fillRect()`. If you now load `index.html` in your browser, you should see something like this:
+ 
+ 
+Great, our canvas is up and running. We have tested it out, and it works. Go ahead and delete the `context.fillRect(0, 0, 100, 100)` code. We don't need it anymore. 
+
+
+## Building the app interface
+
+Before we begin implementing the watermarking app, let's consider its interface and features:
+
+- There is a canvas element, along with form elements that act as the user interface. 
+- The form will have input fields like a "browse" button to upload an image, a text input to enter the watermark text, select fields for choosing the text color, text size, text background, the position of text on the image, and a preview button.
+- We'll grab user input from the form and use it to draw on the canvas using JavaScript. 
+- The preview button will prompt JavaScript to retrieve user input and print data on canvas. 
+- Optionally, we can add a download button for saving the finished watermarked image. 
+ 
+To begin with, here's the HTML code:
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Watermark</title>
+        <meta charset="utf-8" />
+        <style>
+            canvas {
+              border: 1px solid black;
+              }
+        </style>
+    </head>
+    <body>
+       <h1> Watermarker </h1>
+        <canvas id="canvas" width="600" height="400">
+          <p> No canvas support. Please upgrade your browser. </p>
+        </canvas>
+        <form>
+            </form>
+
+            <script src="watermark.js"></script>
+    </body>
+</html>
+```
+
+We have moved our script code to a `watermark.js` file and linked it to it within the `<head>`. The canvas still has the fallback text for old browsers that do not support the canvas API. 
+ 
+Also, there is a `<form>` element containing controls that support the watermarking features. 
+
+Let's add the `<form>` data. This form serves as the user interface. 
+
+```html
+    <form>
+      <!-- Where the user selects an image -->
+      <p>
+        <label for="imageLoader" id="imageLoaderLabel">Choose an image:</label><br />
+        <input type="file" id="imageLoader" name="imageLoader" />
+      </p>
+
+      <!-- Where the user enters the text to be used as a watermark -->
+      <p>
+        <label for="watermarkText">Enter the text to use:</label><br />
+        <input type="text" id="watermarkText" name="watermarkText" />
+      </p>
+
+      <!-- Where the user  selects the position of the text on the image. Feel free to add more options-->
+      <p>
+        <label for="textPosition">Position of text:</label><br />
+        <select id="textPosition">
+          <option value="bottom-left">Bottom Left</option>
+          <option value="center"> Center </option>
+        </select>
+      </p>
+
+      <!-- Where the user  selects the color of the text on the image. Feel free to add more options-->
+      <p>
+        <label for="textColor">Color of text:</label><br />
+        <select id="textColor">
+          <option value="black">black</option>
+          <option value="blue">blue</option>
+          <option value="red">red</option>
+        </select>
+      </p>
+
+      <!-- Another selection control for choosing the font of the text. Feel free to add more options-->
+      <p>
+        <label for="textFont">Text font:</label><br />
+        <select id="textFont">
+          <option value="arial">Arial</option>
+          <option value="helvetica">Helvetica</option>
+          <option value="monospace">Monospace</option>
+        </select>
+      </p>
+
+      <!-- Another selection control for choosing the color of the text background. Feel free to add more options-->
+      <p>
+        <label for="textBgColor">Text background color:</label><br />
+        <select id="textBgColor">
+          <option value="black">black</option>
+          <option value="white">white</option>
+          <option value="transparent">transparent</option>
+        </select>
+      </p>
+
+      <!-- Buttons to preview or download the watermarked image -->
+
+      <input type="button" id="previewBtn" value="Preview">
+
+    </form>
+```
+
+![](/watermark-interface.png)
+
+We've dealt with the markup. Now, we can handle the script. 
+
+Let's start by writing code to load a selected image to the canvas when the "browse..." (`id = imageLoader`) button is clicked. 
+ 
+Add the following code into `watermark.js`:
+
+```js
+// Select the "browse" button, used to choose the image
+const imageLoader = document.getElementById('imageLoader');
+
+/* When the user selects an image, call the loadImage function */
+    imageLoader.addEventListener('change', loadImage, false);
+
+// Select the canvas and give it a 2d context 
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+```
+
+The event listener calls the `loadImage()` function, which is defined below. It reads the selected image using the `FileReader` object and draws it onto the canvas using `drawImage()`. 
+
+```js
+function loadImage(e){
+    // Read the selected image 
+    const reader = new FileReader();
+    reader.onload = function(event){
+        const img = new Image();
+        img.onload = function(){
+            /* Set the width and height of the canvas to
+             match the size of the chosen image */
+            canvas.width = img.width;
+            canvas.height = img.height;
+            // Draw the image on the canvas
+            ctx.drawImage(img,0,0);
+        }
+        img.src = event.target.result;
+        /* Delete the image loader with the prompt to "Choose an image" after an image is chosen */
+        document.getElementById('imageLoaderLabel').remove();
+    }
+    reader.readAsDataURL(e.target.files[0]);     
+}
+```
+
+If you visit `index.html` in a browser, you should be able to select an image and it will be loaded to the canvas.
+
+![](/load-image-watermark.png)
+
+Next, let's enable the "preview" (`id="previewBtn"`) button by making it call a JavaScript function when it is clicked. 
+
+```js
+window.onload = function() {
+    // Get the preview button element
+    const button = document.getElementById("previewBtn");
+    /* Add a click handler to the button so that
+    the previewImage function is called when clicked */
+    button.onclick = previewImage;
+    };
+```
+   
+Now, when the preview button is clicked, the `previewImage()` function is called. Within this function, we shall later add code to watermark the image loaded into the canvas. 
+
+Let's start writing the `previewImage()` function. For the most part, we will use the `fillText()` method. It takes four arguments, corresponding to the actual text, x position, y position, and optionally, the maximum width of the text). It fills the provided text at the (x, y) position of the canvas. The code `context.fillText("hello", 100, 100)` creates a text "hello" starting 100 pixels from the left and top.  
+
+```js
+function previewImage() {
+  // Select the canvas and give it a 2d context
+  let canvas = document.getElementById("canvas");
+  let ctx = canvas.getContext("2d");
+
+  /* Get the value of element with an id of "watermarkText" */
+  let wmText = document.getElementById("watermarkText").value;
+
+  /* If there's actually some text*/
+  if(wmText) {
+
+    /* Find out what options the user has chosen by 
+    getting the indices of the selected items */
+
+    // Get the selected text position 
+    let selectPos = document.getElementById("textPosition");
+    let posIndex = selectPos.selectedIndex;
+    let position = selectPos[posIndex].value;
+
+    // Get the selected text color
+    let selectCol = document.getElementById("textColor");
+    let colIndex = selectCol.selectedIndex;
+    let color = selectCol[colIndex].value;
+
+    // Get the selected text color 
+    let selectFont = document.getElementById("textFont");
+    let fontIndex = selectFont.selectedIndex;
+    let font = selectFont[fontIndex].value;
+
+    // Give text a size of 40px and assign it to the selected font
+    let textSize = 40
+    ctx.font = `${textSize}px ${font}`;
+
+    // Get the width and height of the canvas
+    let w = canvas.width;
+    let h = canvas.height;
+
+    // Get width of the text
+    let text = ctx.measureText(wmText);
+    let textWidth = text.width;
+
+    // Get the selected text background color 
+    let selectBgColor = document.getElementById("textBgColor");
+    let bgIndex = selectBgColor.selectedIndex;
+    let bgColor = selectBgColor[bgIndex].value;
+
+    /* Position the text on the image based on the selected position */
+    if (position == "center") {
+
+        // Color the background with the selected color using the fillStyle property
+        ctx.fillStyle = bgColor;
+        /* Draw the background using the fillStyle property. The x, y positions, width
+        and height are based on the width of the text */
+        ctx.fillRect(w/2 - textWidth/2, h/2-textSize, textWidth*1.2, textSize*1.5);
+        
+        // Fill the context (and text) with selected color
+         ctx.fillStyle = color;
+         // Draw the text using the fillText() method
+         ctx.fillText(wmText, w/2 - textWidth/2.3, h/2);
+    }
+
+    else if (position == "bottom-left") {
+        
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(w - (w - 2), h - textSize, textWidth*1.2, textSize*1.5);
+        // Fill context (and text) with selected color
+        ctx.fillStyle = color;
+        ctx.fillText(wmText, w - (w - 10), h - 10);
+    }
+  }
+}
+```
+
+With the above code, we're pretty much done. You can select an image, type some text into the interface, select colors and fonts. When you click "preview", the text will be drawn on the image using the selected properties. 
+
+![](/watermarked-image.png)
+
+Note that the `selectedIndex` property returns the index of the option currently selected in a dropdown. The list of options is converted to an array, and each element can be selected from the array using the index (0-indexed).
+
+The `fillText()` method accepts the text to draw on the canvas along with its x and y positions. There are various methods for setting the text font, size, and more. Just like with rectangles, we can set text stroke and fill using `fillText()` and `strokeText()` respectively. Both methods take four arguments: the text to draw, the x position, y position, and optionally, the max-width (forces the text to scale if it's wider than the provided max-width).
+
+The font of a piece of text is controlled via the context using `font` property. This property is set using the same format as in CSS. If we specify every property value, we'll set (in this order): font style, font weight, font size, and font family. For example:
+
+```js
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+ctx.font = "3em monospace";
+ctx.fillText("Hello, how are you?", 100, 50);
+ctx.font = "italic bold 2em serif";
+ctx.fillText("Hola, ¿cómo estás?", 100, 100);
+```
+
+The above code produces the following results:
+
+![](/font-test.png)
+
+The canvas does not have a direct way of creating text with a background. An easy workaround is to draw a rectangle and place it below the text, making it look like a background. 
+
+Let's take a closer look at `fillStyle`. It is a context property that holds the color of anything drawn on the canvas. It accepts color names (like red, black. green) and values like `#0000` or `rgb(0,0,0)`. 
+
+```js
+ctx.fillStyle = color;
+```
+
+Notice that since the text background and text color are usually different values, we have to set `fillStyle` multiple times. You might expect us to set the rectangle color and text color using the `fillRect()` and `fillText()` methods respectively, but that is not how the canvas works. 
+
+The canvas context is an object that maintains a state. With `fillStyle`, we update this state, telling the canvas that any subsequent shapes should use this color. This color persists until `fillStyle` is updated again. 
+
+### Downloading an image from the canvas
+
+If you want to go further, you can [add download functionality](/blog/download-canvas-image) so that the watermarked image can be downloaded and saved to the user's device. This can be done using the `toDataURL()` method of the canvas object. 
+
+## Summary
+
+Here are the canvas basics we covered in this tutorial:
+
+- The canvas is an element that provides a drawing space on a web page
+- You specify the width and height of the canvas using the width and height attributes on the element
+- Everything drawn on the canvas is done using JavaScript
+- Before you can draw on the canvas, you must first create a context that provides a kind of interface (e.g 2D). 
+- To create a rectangle, use the context `fillRect()` method. This draws a rectangle filled with color. 
+- To create a rectangle outline, use `strokeRect()` method
+- to draw text in the canvas, use the `fillText()` method. You can specify the position, color, style, and other text properties using context properties. 
+- When you set a context property, such as `fillStyle`, it applied to every drawing that follows until you change the property to a different value.
+- To draw an image on the canvas, use the `drawImage()` method.  9:T22af,
+UX writing is the practice of crafting text for digital interfaces that help users interact with products more conveniently. While it is not expected for designers and developers to be professional writers, knowing how to write UX copy is valuable when creating digital products. The following UX writing tips might help.
+
+### 1) Write clearly
+Do not assume your reader knows the point you're trying to make. Think about what exactly you want to say and say it clearly. No one wants to read a piece of text multiple times before understanding. A quick scan should be enough. People usually quickly scan text rather than read everything, since they lack time and have a short attention span. Therefore, every word you use should be relevant and understandable. 
+Here are some tips to help you write clearly:
+- Use simple words. 
+- Use the active voice instead of the passive voice. Using the active voice makes sentences flow better and motivates user action. 
+- Be uniform in your choice of possessive adjectives (like my, your, her, our). For instance, don't write "Your account", "My Music" in the same menu. Pick an adjective and use it consistently. 
+- Use technical terms sparsely, and when you do, add a short definition or description. The reader might not know the service or product you are writing about. Do not assume they do. Before writing UX text, it helps to list and define the terms to use and those to avoid (such as terms that are difficult to understand, sensitive, or confusing). For example, instead of writing  "Connection error, server unreachable", you might say "You are offline. Check your internet connection and retry". 
+
+### 2) Be concise
+Writing a shorter statement often takes more time than a longer one because condensing information is hard. On small screens, space is limited, so you must maximize value. 
+- Express concepts succinctly. 
+- Use short sentences. 
+- Place important information at the beginning.
+- Delete unnecessary words without losing meaning. For example, instead of "Connection error, the server is unreachable. You are offline.", say "No internet".
+
+### 3) Be consistent
+UX text is meant to assist, not confuse. The navigation and other components of a digital product should be consistent. Not just consistent design (colors, layout, etc) but consistent text. Consistency is harder to achieve when many people are working on an application (such as in open-source software) or when there are several pages. To maintain textual consistency:
+- Make a list of all key terms, define them, and ensure they are used consistently.
+- Document colors and fonts.
+- Don't make the user think. Use familiar phrases like "Contact Us" instead of "Reach out".
+- Avoid using synonyms for the same concept. If you choose "Contact Us", stick with it. Don't mix it with "Get Help" or "Support". 
+
+### 4) Be helpful
+If you're trying to guide people, do it properly. The navigation and other components should be smooth and self-explanatory. 
+- Think about possible issues or points of confusion your users might encounter, then try to guide them through these using text. You can find possible user issues via user research. User research can be as simple as reading open issues (for open source projects), checking frequently asked questions on chat/support channels like Reddit, Stack Overflow, IRC channels, Discourse or just casually talking to users about their pain points. Make sure your writing answers the frequently asked questions. If there's a feature that people are regularly asking how to use, this is an indication that you need clearer instructions. Know when instructions are necessary, and when they are, be as succinct as possible. Use simple, well-structured sentences that are straight to the point and accurate. 
+- Avoid forcing long instructions into an interface with limited space. Rather, link to instructions/FAQs or use tooltips.
+- Provide actionable error messages. For example, if you have a "No internet connection" error message, it's more helpful to have a button that says "Retry" rather than "OK".  
+
+### 5) Write naturally
+The reader might not know a lot about a topic or domain as much as you do. It's up to you to educate them, irrespective of their background and skills. 
+- Do not use many big or uncommon words. 
+- If you must use technical words, define them in case the reader doesn't know what they mean.
+- Avoid abbreviations, except common ones (e.g USB). If you must use uncommon abbreviations, make sure they have been defined earlier. 
+- Do some keyword research and include these keywords in your writing. Keywords are words that people usually use when searching for a resource online. Tools like Ubersuggest, Keyword Tool, and Google Trends can be used to find them. 
+- Set a tone, depending on your audience. For example, your tone may be casual or technical/professional. What voice/tone are you trying to convey? Consider your readers before making a decision.
+
+
+### 6) Be human
+It can be difficult to express human emotion via text, but it's worth a try. Try to make the reader feel like you care about them. Be less mechanical and more emotional. Granted, it is not easy to talk naturally via written text. Speaking is easier and informal, while writing is more structured. 
+
+The points below might help you infuse some human warmth into your text:
+- Instead of saying "The contact form has been sent. Expect a response shortly", say "We have received your message. We'll get back to you soon". 
+- People from different cultures may be sensitive to be a particular topic. Keep your audience in mind.
+- Acting human doesn't mean you should be sympathetic. You don't have to be too clever or hilarious either, as this may distract from the core meaning of your text or distract the user from a task or action. All in all, it depends on your brand, tone of voice, and target audience. 
+
+### 7) Be structured
+Good information architecture is important. When the content of a site or page is well structured, it's easier for users to find what they need. In contrast, disorganized content is hard to find and understand. When designing content, 
+- Make a list of your objectives. Know why you're writing, who you're writing for and the impact your text should have. 
+- Start with the most important content at the top of the page, and less important text below. The stuff below should still be important, but not as important as that at the top of the page. Anything that is not helpful should be removed. 
+- Use elements like titles, subtitles, and lists to organize content into sections
+- Use keywords in headings to attract the reader's attention
+- Arrange content such that related things are next to each other visually
+- Split long text into digestible bits
+- Slowly reveal the content (where possible) to avoid overwhelming the reader. 
+
+### 8) Be focused
+Yes, you have so much to say. But writing too much text may not help as much as you expect it to. There's no guarantee everything you write will be read. 
+
+Look at your content and ask yourself if every piece of text is necessary. If something is important, you can compel the reader to pay attention to it by surrounding it with adequate blank space. People find it easier to focus on something when there is more space around it. For example, a button with space around it will catch the user's attention. Whenever you have a call to action, highlight it with whitespace. Aside from focus, whitespace around text improves readability. 
+
+### 9) Be inclusive and accessible
+Needless to say, accessibility is important. You should strive to build products that can be used by all. 
+
+Accessible language is language that can be easily read and understood by everyone. The reader might have a disability such as learning difficulties, poor eyesight, color blindness, poor motor skills (that impede their ability to move a mouse or use a keyboard), or have other limitations. Put yourself in their shoes and try to accommodate them by:
+- Using simple words and avoiding technical terms if possible
+- Providing concise, direct instructions
+- Using text on links to explain what should happen after clicking
+
+Inclusive language is language that is appropriate for all groups of people. Your readers might come from different cultures. Steer away from phrases or expressions that are sensitive to certain groups of people. Be respectful of others' beliefs, and be careful not to negatively influence them with your choice of words. For example, 
+- Words like "retarded" are considered offensive nowadays.
+- Avoid vague and unclear groupings, for example, "Asians". In some cases, it might not be clear who exactly qualifies as an Asian. 
+- Unless necessary, don't specify gender. Avoid gendered words like "salesman" (use salesperson). Instead of saying "wife" or "husband", you can say "spouse" or "partner". 
+- Avoid stereotypes.a:T38eb,
+Regular expressions are a method to describe patterns in string data. Regular expressions form a tiny, separate language part of many languages, including JavaScript. 
+
+Admittedly, regular expressions have a cryptic syntax and are often difficult to write. Knowing how to write them does come in handy in the real world, especially when processing and inspecting strings. 
+
+### Creating a regular expression
+
+In JavaScript, a regular expression is an object, constructed with either the `RegExp` constructor or with forward slash (`/`) characters enclosing a pattern as a value (literal notation). 
+
+```js
+let regExpres1 = new RegExp("xyz");
+let regExpres2 = /xyz/
+```
+
+Both of the above regular expression objects represent a pattern of a character _x_ followed by a _b_ character followed by a _c_. 
+
+When creating a regular expression using the `RegExp` constructor, the pattern is written as a normal string, so usual rules for backslashes apply.
+
+On the other hand, regular expressions defined using literal notation treat backslashes differently. Since a forward slash marks the start and end of the pattern, you must place a backslash before any forward slash you want to include in the pattern. If a backslash is not part of a special character (like `\n`), it is preserved in the regex pattern. 
+
+### Handling special characters
+
+Characters like plus signs (`+`) and question marks (`?`) have special meanings in regular expressions and need to be preceded by a backslash if you want to indicate the character itself. 
+
+```js
+let helloQuestion = /hello\?/
+```
+
+### Checking for a match
+
+Like "normal" objects, regular expressions have methods. The most common method is `test()`, which accepts a string and returns a Boolean that tells you whether the string matches the pattern in the expression. 
+
+```js
+console.log(/xyz/.test("abcxyz"));
+// → true
+console.log(/xyz/.test("axyzbc"));
+// → true
+console.log(/xyz/.test("uvwxzya"));
+// → false
+```
+
+When there are no special characters, a group of characters represents that sequence of characters. In the example above, we are testing if _xyz_ occurs anywhere in the string. This is a rather simple test that can easily be replicated using indexOf. Regular expressions are not made for such simple cases. Their power lies in their ability to allow us to express complex patterns, as you will see below.
+
+
+### Matching complex patterns
+
+####  Sets of characters
+Suppose we want to match a set of characters, say, any Latin letter. Placing a set of characters between square brackets matches that part of the regular expression to any of the characters within the brackets. 
+
+```js
+console.log(/[abcdefghijklmnopqrstuvwxyz]/.test("year 2021"));
+// → true
+```
+
+#### Ranges of characters
+The above expression matches all strings that contain lowercase Latin letters. We can make the expression shorter by using a hyphen (`-`). A hyphen between two characters between square brackets represents a range of characters. 
+
+```js
+console.log(/[a-z]/.test("year 2021"));
+// → true
+```
+
+We can similarly test for numbers:
+
+```js
+console.log(/[0123456789]/.test("year 2021"));
+// → true
+console.log(/[0-9]/.test("year 2021"));
+// → true
+```
+
+For a range of characters indicated with a hyphen, the ordering of the characters is determined by their Unicode number. For example, characters _a-z_ (codes 97-122) are next to each in the Unicode ordering, and so using range `[a-z]` includes every character in this range and matches all lowercase Latin letters.
+
+#### Character groups shorthand
+
+In regular expressions, character sets/groups have a built-in shorthand for writing them. Digits (`[0-9]`) can be represented as `\d`. Here are some common character sets and their shorthand codes:
+
+| Character | Purpose |
+| --- | --- |
+| `\d` | A digit character |
+| `\D` | A character that is not a digit |
+| `\w` | An alphanumeric character ("word character") |
+| `\W` | A non-alphanumeric character |
+| `\s` | Any whitespace character (space, tab, newline, etc.) |
+| `\S` | Any character except for whitespace | 
+
+If we want to match a phone number with format `XXX-XXX-XXXX`, here's how we can do it:
+
+```js
+let phoneNum = /\d\d\d-\d\d\d-\d\d\d\d/
+console.log(phoneNum.test("202-588-6500"));
+// → true
+console.log(phoneNum.test("67-500-647"));
+// → false
+```
+#### Special characters
+
+These shorthand codes can also be used within square brackets to indicate a set of characters. For example, `[\d]` represents any digit. When special characters like the period (`.`) and the plus (`+`) are used between square brackets, they lose their special meaning. So, `[.+]` matches any period or plus character. 
+
+#### Exclude characters
+
+The caret (`^`) character lets you invert a set of characters. That is, it matches any character except the character(s) in the given set. 
+
+```js
+let notNumber = /[^\d]/;
+console.log(notNumber.test("ujdhf345kd"));
+// → true
+console.log(notNumber.test("3453"));
+// → false
+```
+
+#### Repeated patterns
+
+Let's revisit the phone number matching code from earlier. The code works. But it looks very clunky and awkward to write. There are too many `\d`'s, which make it difficult to see the pattern we are trying to represent. To match repeating parts of a pattern, such as a sequence of digits, we use the plus sign (`+`). When the plus sign follows a character or group of characters, this indicates that the character(s) may be repeated more than once. For example, the expression `/\d+/` matches one or more digit characters. So, we can shorten our phone number matching code to:
+
+
+```js
+let phoneNum = /\d+-\d+-\d+/
+console.log(phoneNum.test("202-588-6500"));
+// → true
+console.log(phoneNum.test("67-500-647"));
+// → true
+```
+
+The plus symbol matches a pattern at least once. To allow a match of zero or more times, we use the asterisk (`*`). Note that the asterisk does not stop a pattern from matching -- it just matches zero instances if the pattern does not exist. 
+
+
+```js
+console.log(/'\d*'/.test("'890'"));
+// → true
+console.log(/'\d*'/.test("''"));
+// → true
+```
+
+The previous phone number code is much more concise, but it also matches other formats in addition to the `XXX-XXX-XXXX` format we expect it to. That's because `/\d+/` matches any number of digits. 
+
+To specify the number of times a pattern should occur, we use numbers within braces after an element. For example, using `{3}` after an element specifies that the element should occur exactly three times. We can also specify a range by separating two numbers with a comma. `{3, 5}` indicates that the element should occur at least thrice and at most five times. We can specify open-ended ranges by omitting a second number after the comma. So, `{3,}` means three or more times. 
+
+Here's another modification of our phone number verification code:
+
+```js
+let phoneNum = /\d{3}-\d{3}-\d{4}/
+console.log(phoneNum.test("202-588-6500"));
+// → true
+console.log(phoneNum.test("67-500-647"));
+// → false
+```
+
+#### Optional characters
+
+Phone numbers are usually valid even when they are not hyphenated. We can make the hyphen optional. To make a part of a pattern optional, we use the question mark (`?`). It allows a character to occur zero or one number of times. 
+
+
+```js
+let phoneNum = /\d{3}-?\d{3}-?\d{4}/
+console.log(phoneNum.test("202-588-6500"));
+// → true
+console.log(phoneNum.test("2025886500"));
+// → true
+```
+
+In the above example, the pattern matches even when the hyphen character (`-`) is omitted. 
+
+#### Group characters
+
+We enclose multiple elements within parentheses `()` to treat them as a single element when using operators like `+` or `*`. When a part of a regular expression is surrounded by parentheses, it is treated as a single element by any operations following it. Below, the `+` applies to the group `ho` and it matches one or more sequences like it.
+
+
+```js
+let santaLaugh = /(ho)+/i;
+console.log(santaLaugh.test("hohohoho"));
+// → true
+```
+
+#### Case sensitivity
+
+The `i` character at the end of the expression makes the regular expression case-insensitive. The code below matches the uppercase `H` in the input string, even though the actual pattern is all lowercase. 
+
+```js
+let santaLaugh = /(ho)+/i;
+console.log(santaLaugh.test("Hohohoho"));
+// → true
+```
+
+#### Matching within boundaries
+
+To make a matching span through an entire string, we use the `^` and `$` characters. The dollar sign matches the end of the input string, while the caret matches the start. The expression `/^\d+$/` matches a string that is made up of numbers from start to end. `/^a/` matches a string that starts with the letter `a`, and `/!$/` matches a string that ends with an exclamation mark. 
+
+The marker `\b` refers to a word boundary, which can be the start or end of the string. It can also refer to any place in the string that has a word character on one side and a non-word character on the other side. 
+
+```js
+console.log(/pp/.test("happy"));
+// → true
+console.log(/\bpp\b/.test("happy"));
+// → false
+```
+
+A boundary marker matches an expression only when a specific condition holds at the point it exists in the pattern. It does not match an actual character. 
+
+We use the pipe character `(|)` to indicate a choice between a pattern to its left and that to its right. For example, we can match a text that contains the word "watch" in either its plural (ending with "es") form, past tense (ending with "ed"), or personal noun (ending with "er") form. 
+
+```js
+let word = /\b\watch(es|ed|er)?\b/;
+console.log(word.test("watch"));
+// → true
+console.log(word.test("watched"));
+// → true
+console.log(word.test("watcherrr"));
+// → false
+```
+
+In the above example, we use parentheses to limit the section of the expression that the pipe operator should be applied to. 
+
+### Other methods for matching
+
+Unlike the `test()` method that returns only true or false depending on whether or not the pattern matched, the `exec()` (execute) method returns an object with information about the match if a match is found and it returns `null` otherwise. 
+
+```js
+let execMatch = /\d+/.exec("abc 123");
+console.log(execMatch);
+// → Array [ "123" ]
+console.log(execMatch.index);
+// → 4
+
+let execMatch2 = /\d+/.exec("abc");
+console.log(execMatch2);
+// → null
+```
+
+When we log `execMatch`, we see an array whose first element is a sequence of the successful match. `exec()` has an `index` property that tells us the position where the successful match begins. 
+
+The `match()` method for strings behaves like `exec()`:
+
+```js
+console.log("abc 123".match(/\d+/));
+// → Array [ "123" ]
+```
+
+If the regular expression has subexpressions within parentheses, any text matching these subexpressions will be shown in the array. The first element of the array is always the whole match. The next element, if it exists, is the part matched by the first subexpression -- that is, the subexpression whose opening parentheses appear first in the expression -- then the second expression, and so on.
+
+```js
+let quoted = /'([^']*)'/
+console.log(quoted.exec("I said 'yes' to his proposal"));
+// → Array [ "'yes'", "yes" ]
+```
+
+When a subexpression grouped in parentheses does not have a match in the input string (for example, when the subexpression is followed by a question mark), the value `undefined` is returned in its place in the output array. 
+
+```js
+console.log(/program(mer)?/.exec("program"));
+// → Array [ "program", undefined ]
+console.log(/(\w)+/.exec("abc"));
+// → Array [ "abc", "c" ]
+```
+
+### Matching and replacing
+
+The replace method can be used on strings to replace part of a string with another string. For example:
+
+```js
+console.log("haha".replace("a", "e"));
+// → heha
+```
+
+The first argument of the `replace()` method can be a regular expression. Here, the first match of the regular expression is replaced. To replace all matches in a string rather than just the first, add the `g` (global) option to the regular expression. 
+
+```js
+console.log("hahehahehe".replace(/a/, "e"));
+// → hehehahehe
+console.log("hahehahehe".replace(/a/g, "e"));
+// → hehehehehe
+```
+
+The behavior of replacing all matches in a string can also be achieved using JavaScript's `replaceAll()` method without regular expressions. However, using regular expressions with `replace()` allows us to reference matched subexpression groups. For example, say we have a string "2 3" and we want to swap the numbers to "3 2":
+
+```js
+console.log("2 3".replace(/(\w+) (\w+)/g, "$2 $1"));
+// → 3 2
+```
+
+In the above code, the groups `(\w+)` and `(\w+)` are associated with the characters `$1` and `$2` in the replacement string. `$1` is replaced by the text matching the first group, `$2` by the second group. The entire match can be referenced with `$&`. 
+
+Instead of a string, we may decide to pass a function as the second argument of the `replace()` method. For each replacement, the function is called with the matched subexpression groups as arguments, and then the return value is added to the new string. The following code accepts a function as a second argument and converts specific strings to uppercase:
+
+```js
+let phrase = "unicef is a humanitarian ngo.";
+let result = phrase.replace(/\b(unicef|ngo)\b/g, word => word.toUpperCase())
+console.log(result);
+// → UNICEF is a humanitarian NGO.
+```
+
+### Regex constructor VS literal notation
+
+When writing your code, you may not know the actual pattern you are expected to match. In this case, you can dynamically create RegExp objects. Suppose you want to look for a particular word in a sentence and surround it with quotation marks. Since this word will only be known during program execution, it is better to use the `RegExp` constructor rather than literal notation. 
+
+```js
+let word = "hello";
+let sentence = "Mary says hello.";
+let re = new RegExp("\\b(" + word + ")\\b", "i");
+console.log(sentence.replace(re, "'$1'"));
+// → Mary says 'hello'.
+```
+
+Notice that because we are writing the `\b` boundary markers as a regular string, we use two backslashes when creating the `\b` boundary marker in the `RegExp` constructor. The second argument given to the `RegExp` constructor holds the options for the regular expression, such as `i` for case-insensitivity in this example. 
+
+The `indexOf()` string method is usually used to get the position of a character or group of characters in a string. Its main drawback is it does not accept regular expressions. To use regular expressions to determine the index of a character, the `search()` method comes in handy. 
+
+```js
+console.log("year 2021".search(/\d/));
+// → 5
+```b:T6101,
+Inspired by my own challenges with weight fluctuations, I wanted to explore how people's weight might change based on calorie consumption. This article details how I went about modelling weight change with differential equations, and building a web application around this model. With the web app, users can enter personal information and see how their weight might change per month over time. This data will be visualized using a table and a line graph.
+
+Here is the [final website](https://enjeck.com/weight-change-prediction/) and the [code on GitHub](https://github.com/enjeck/weight-change-prediction).
+
+## The mathematical model
+
+Differential equations have many applications in the real world.
+They are especially useful whenever you want to model how a system changes with respect to something, usually time. It can be a mechanical system like a pendulum, a dynamic system like the interaction of planets in space, an economic system like population decline/explosion, and so much more. For this project, the goal was to apply differential equations to build a model for predicting human weight changes based on calorie consumption.
+
+Initially, I considered basing my model on energy expenditure per kilogram. The daily rate of energy expenditure is between 35 and 45 calories per kg per day, depending on the person's sex, age, activity level, and other factors. I was not sure how to adjust this daily energy expenditure to reflect these factors. For simplicity, I could have just assumed that a person's daily average energy expenditure is the mean of 35 and 45, which is 40 calories per kg per day. Rather than make this assumption, I decided to use the basal metabolic rate.
+
+The [basal metabolic rate (BMR)](https://en.wikipedia.org/wiki/Basal_metabolic_rate) is the rate of energy expenditure per unit time by endothermic animals at rest. The [Mifflin St Jeor equation](https://en.wikipedia.org/wiki/Basal_metabolic_rate#BMR_estimation_formulas) is considered one of the most accurate formula to calculate BMR:
+
+$$
+P = \left({10.0m \over 1kg} + {6.25h\over 1cm} - {5.0a\over 1year} + s \right) \frac{kcal}{day}
+$$
+
+where,
+
+- _m_ = body mass in kg
+- _h_ = height in cm
+- _a_ = age in years
+- _s_ = +5 for men and -161 for women
+
+For example, a 25-year-old woman weighing 80kg and 170cm tall would have a BMR of 1576.5 kcal per day. This value is the number of calories her body spends at complete rest. Performing activities like going to work, doing house chores, or exercising increases the total daily expenditure. A normal person does not spend all day at rest, so we can scale the BMR, _P_, by an "activity factor" which depends on daily activities. The value of this activity factor varies based on activity:
+
+| Level of Activity                                         | Activity factor |
+| --------------------------------------------------------- | --------------- |
+| Bed rest (Bedridden - Unconscious)                        | 1.0-1.1         |
+| Sedentary (Little to no exercise )                        | 1.2             |
+| Light exercise (1-3 days per week)                        | 1.3             |
+| Moderate exercise (3-5 days per week)                     | 1.5             |
+| Heavy exercise (6-7 days per week)                        | 1.7             |
+| Very heavy exercise (twice per day, extra heavy workouts) | 1.9             |
+
+Including this activity factor, _f_, into the BMR formula, we get our estimated total daily energy expenditure, which we shall call _T_,
+
+$$
+T = f (10m + 6.25h - 5a + s)
+$$
+
+According to the activity factor chart, if the woman in the aforementioned example does light exercise, her total daily energy expenditure is 1.3\*1576.5 ≈ 2050. What does this mean in terms of weight change? It means in order to lose weight, this woman must consume less than 2050 calories daily. Consuming more than 2050 calories will result in weight gain.
+
+No matter the approach taken to build a mathematical model for weight change, we shall always end up using the [first law of thermodynamics](https://en.wikipedia.org/wiki/First_law_of_thermodynamics) to create an equation expressed in terms of exponential decay or growth.
+
+The fact that the equation will have an exponential term (that is, using Euler's number, _e_) makes sense, when you come to think of it. For clarity, suppose the woman in the example above wants to lose weight. It is estimated that 7700 calories equal one kilogram. If the woman reduces her daily calorie intake to 1500 calories, this produces a deficit of 550 calories. Assuming she follows the diet strictly, in 2 weeks (14 days), this woman should accrue a total calorie deficit of 7700, which equates to 1 kilogram lost. Therefore, she should lose 2kg in 4 weeks, 3kg in 6 weeks, 6kg in 8 weeks, right?
+
+Wrong!
+
+The rate of weight change is not constant, because as she loses weight, her BMR changes, which means she must adjust her calorie intake. For this reason, the weight change equation will have an exponential decay term based on time, which governs how the rate of weight loss slows down as weight (and BMR) changes.
+
+The first law of thermodynamics states that:
+
+$$
+Change\ in\ energy = heat\ added - work\ done\ by\ the\ system
+$$
+
+Applying this law to food eaten, we have:
+
+$$
+Calories\ surplus\ or\ deficit = calories\ in - calories\ out
+$$
+
+Let variable _n_ represent the daily calories intake. Calories out is given by the total daily energy expenditure (_T_) value stated earlier:
+
+$$
+Net\ daily\ calorie\ surplus/deficit = n - T
+$$
+
+$$
+Net\ daily\ calorie\ surplus/deficit = n - f (10m + 6.25h - 5a + s)
+$$
+
+Instead of using the variable _m_, let's replace it with _w(t)_, which represents the weight after time _t_ (in days):
+
+$$
+Net\ daily\ calorie\ surplus/deficit = n - f (10w(t) + 6.25h - 5a + s)
+$$
+
+If we estimate one kilogram to be 7700 calories, then dividing the equation by 7700 gives the weight change:
+
+$$
+weight\ change = \frac{n - f (10w(t) + 6.25h - 5a + s)}{7700}
+$$
+
+This change in weight is approximately the derivative of _w(t)_:
+
+$$
+\frac{dw(t)}{dt} = \frac{n - f (10w(t) + 6.25h - 5a + s)}{7700}
+$$
+
+This is a first order ordinary differential equation. We can solve for _w(t)_ via [separation of variable](https://en.wikipedia.org/wiki/Separation_of_variables). At first glance, the equation may not look separable, but it is.
+
+$$
+\frac{dw(t)}{dt} = \frac{n -10fw(t) - f(6.25h - 5a + s)}{7700}
+$$
+
+$$
+\frac{dw(t)}{dt} = \frac{-10fw(t)}{7700} + \frac{n - f(6.25h - 5a + s)}{7700}
+$$
+
+$$
+\frac{dw(t)}{dt} = \frac{-fw(t)}{770} + \frac{n - f(6.25h - 5a + s)}{7700}
+$$
+
+The differential equation has only two main variables _w(t)_ (dependent variable) and _t_ (independent variable) because the derivative term says $\frac{dw(t)}{dt}$. To ease calculations, we can temporarily treat the other variables (_f_, _h_, _a_, _s_) as constants:
+
+$$
+Let\ k = \frac{n - f(6.25h - 5a + s)}{7700}
+$$
+
+$$
+\frac{dw(t)}{dt} = \frac{-fw(t)}{770} + k
+$$
+
+To separate, we multiply through by _dt_ and divide by $\frac{-fw(t)}{770} + k$
+
+$$
+\frac{dw(t)}{{-fw(t)\over 770} + k} = dt
+$$
+
+Now, we proceed as we normally would when solving separable ordinary differential equations, by integrating:
+
+$$
+\int\frac{dw(t)}{{-fw(t)\over 770} + k} = \int{dt}
+$$
+
+$$
+\int\frac{1}{{-fw(t)\over 770} + k}dw(t) = \int{dt}
+$$
+
+$$
+{1 \over {-f\over 770}} \log \left|{{-fw(t)\over 770} + k}\right| = t + c_{1}
+$$
+
+where $c_1$ is the constant of integration.
+
+$$
+\log \left|{{-fw(t)\over 770} + k}\right| = {-f\over 770} (t + c_{1})
+$$
+
+Putting everything in base _e_, the _log_ cancels out and we get:
+
+$$
+\frac{-fw(t)}{770} + k = \pm e^{\frac{-f}{770} (t + c_1)}
+$$
+
+$$
+\frac{-fw(t)}{770} + k = \pm c_1 e^{\frac{-ft}{770}}
+$$
+
+$$
+\frac{-fw(t)}{770} = \pm c_1 e^{\frac{-ft}{770}} - k
+$$
+
+$$
+-fw(t) = 770(\pm c_1 e^{\frac{-ft}{770}} - k)
+$$
+
+$$
+fw(t) = \pm770 c_1 e^{\frac{-ft}{770}} + 770 k
+$$
+
+$$
+Let\ c_2 = \pm770 c_1
+$$
+
+$$
+fw(t) = c_2e^{\frac{-ft}{770}} + 770 k
+$$
+
+$$
+w(t) = \frac{c_2e^{\frac{-ft}{770}} + 770 k} {f}
+$$
+
+$$
+w(t) = \frac{c_2e^{\frac{-ft}{770}}}{f} + \frac{770 k} {f}
+$$
+
+$$
+Let\ c = \frac{c_2}{f}
+$$
+
+$$
+w(t) = ce^{\frac{-ft}{770}} + \frac{770 k} {f}
+$$
+
+Replacing _k_ with its original expression, we get:
+
+$$
+w(t) = ce^{\frac{-ft}{770}} + \frac{770}{f} \left(\frac{n - f(6.25h - 5a + s)}{7700} \right)
+$$
+
+$$
+w(t) = ce^{\frac{-ft}{770}} + \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+We can now solve for the constant _c_. Generally, at the starting weight, t = 0 (that is, at day 0). Substituting _t = 0_ in the equation, we get:
+
+$$
+w(0) = ce^{0} + \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+$$
+w(0) = c + \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+$$
+c = w(0) - \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+For any person, given a starting weight _w(0)_, number of calories eaten per day _n_, activity factor _f_, height _h_, age _a_ and sex _s_, we can calculate the constant _c_. The value of _c_ will then be substituted back into the equation, and can be used to calculate the weight after any amount of time, e.g after 1 year.
+
+Let's consider the example woman again. She is 25 years old, initially weighs 80kg, 170cm in height and eats 1500 calories daily.
+
+- f = 1.3
+- h = 170cm
+- s = -161
+- w(0) = 80kg
+- a = 25
+- n = 1500
+
+$$
+c = 80 - \frac{1500 - 1.3(6.25(170) - 5(25) -161)}{10(1.3)}
+$$
+
+$$
+c = 80 - 37.7
+$$
+
+$$
+c = 42.3
+$$
+
+Fitting _c = 42.3_ into the original equation, we get the following solution for this woman:
+
+$$
+w(t) = 42.3e^{\frac{-ft}{770}} + \frac{n - f(6.25h - 5a + s)}{10f}
+$$
+
+The value of _c_ varies from person to person, since it is based on personal information like age, height, activity, sex and calorie intake.
+
+For this particular woman, we can now find out her weight after 1 year (_t_ = 365 days):
+
+$$
+w(365) = 42.3e^{\frac{-(1.3)(365)}{770}} + \frac{1500 - 1.3(6.25(170) - 5(25) - 161)}{10(1.3)}
+$$
+
+$$
+w(365) = 22.8 + 37.7
+$$
+
+$$
+w(365) = 60.5
+$$
+
+So, after 1 year, this woman's weight has dropped from 80kg to 60.5kg. Losing 19.5kg over a year is a realistic prediction. After 2 years, her weight should be 50kg, a difference of 10kg from the first year's loss. As you can see, as she loses weight over time, the rate of weight loss slows down.
+
+## The code
+
+The hard part is done. Now, we can easily translate the mathematical model into code. Using HTML, CSS and JavaScript, we will build a web app that accepts age, height, current weight, sex and diet as input and then shows a month-by-month prediction (in the form of a table of value and line chart) of how a person's weight might change over 8 years. Assuming they stick to the diet, of course.
+
+#### HTML
+
+For the most part, the HTML code is a series of input fields and an output area. In the `<head>` of the file, there's a `<script>` adding the [D3.js library](https://d3js.org/), that will be used to draw the line chart. All input fields are marked as `required` to ensure that the user fills them out. The age, height, current weight and calories fields are given `type=number` to prevent invalid non-numeric entries.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Weight change prediction</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+    <!-- D3 library used to draw line graph -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div id="main">
+      <div class="intro">
+        <h1>Weight change prediction</h1>
+        <p>
+          If you eat X number of calories a day, will you gain or lose weight?
+          And how does this weight change look like over time? Let's find out!
+        </p>
+      </div>
+      <form id="form">
+        <!-- Series of input fields -->
+        <label for="age">Enter your age (in years): </label>
+        <br />
+        <input placeholder="e.g 25" type="number" id="age" required />
+        <br />
+        <label for="weight">Enter your current weight (in kg): </label>
+        <br />
+        <input type="number" id="weight" required />
+        <br />
+        <label for="height">Enter your height (in cm): </label>
+        <br />
+        <input type="number" id="height" required />
+        <br />
+        <label for="diet">How many calories will you eat daily?: </label>
+        <br />
+        <input type="number" id="diet" required />
+        <br />
+        <div>
+          <p>Enter your sex:</p>
+          <input
+            type="radio"
+            id="sexChoice1"
+            name="sex"
+            value="male"
+            required
+          />
+          <label for="sexChoice1">Male</label>
+
+          <input
+            type="radio"
+            id="sexChoice2"
+            name="sex"
+            value="female"
+            required
+          />
+          <label for="sexChoice2">Female</label>
+        </div>
+        <label for="activity">How many calories will you eat daily?: </label>
+        <br />
+        <select name="activity" id="activity" required>
+          <option value="sedentary">Sedentary (Little to no exercise )</option>
+          <option value="light-exercise">
+            Light exercise (1-3 days per week)
+          </option>
+          <option value="moderate-exercise">
+            Moderate exercise (3-5 days per week)
+          </option>
+          <option value="heavy-exercise">
+            Heavy exercise (6-7 days per week)
+          </option>
+          <option value="v-heavy-exercise">
+            Very heavy exercise (twice per day, extra heavy workouts)
+          </option>
+        </select>
+        <br />
+        <!-- Submit button -->
+        <input type="submit" value="Predict" id="predict-btn" />
+      </form>
+      <div id="output">
+        <h2 class="output-text">Predictions over 100 months (~8 years)</h2>
+
+        <!-- Output area for the line chart-->
+        <h3 class="output-text">Line chart</h3>
+        <div id="line-chart"></div>
+
+        <!-- Output area for the table of chart-->
+        <h3 class="output-text">Table of values</h3>
+        <div id="table"></div>
+      </div>
+    </div>
+  </body>
+</html>
+```
+
+#### CSS
+
+Here is some basic styling:
+
+```css
+.top-menu {
+  padding: 20px 5%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.top-menu a {
+  font-weight: bold;
+}
+
+#main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 10px;
+  font-family: "Courier New", Courier, monospace;
+  scroll-behavior: smooth;
+}
+
+.intro h1 {
+  text-align: center;
+  font-weight: bold;
+  color: blueviolet;
+  text-shadow: 1px 1px 1px black;
+  text-transform: uppercase;
+}
+
+.intro p {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+#form {
+  padding: 20px;
+  background: #eee;
+}
+
+#form input,
+select {
+  padding: 5px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+#form label {
+  line-height: 30px;
+}
+
+#form #predict-btn {
+  outline: non;
+  border: 0;
+  background: blueviolet;
+  padding: 10px 40px;
+  margin-top: 20px;
+  color: #fff;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#output,
+#line-chart {
+  width: 100%;
+  height: auto;
+  margin: auto;
+}
+
+#line-chart {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+h2.output-text {
+  color: blueviolet;
+  text-decoration: none;
+}
+
+.output-text {
+  margin-top: 50px;
+  text-align: center;
+  text-decoration: underline;
+  /* Hide the output area text by default*/
+  display: none;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  max-width: 1000px;
+  margin: auto;
+  margin-bottom: 40px;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  width: 25%;
+}
+.red {
+  color: red;
+}
+.green {
+  color: green;
+}
+```
+
+#### JavaScript
+
+When the user submits the form (by clicking the "Predict" button), we intend to display a table of data and a graph on the same page. To make this seamless, let's stop the default behavior of page reload upon form submission:
+
+```js
+// Prevent the page from reloading when form is submitted
+const form = document.getElementById("form");
+function handleForm(event) {
+  event.preventDefault();
+}
+form.addEventListener("submit", handleForm);
+```
+
+Let's listen for when the submit button is click and then call a hander:
+
+```js
+document.querySelector("#predict-btn").addEventListener("click", predict);
+```
+
+The `predict` function will hold all the code required to calculate the weight changes and display on the page. Henceforth, every code snippet is placed within `predict`.
+
+```js
+function predict() {
+  // Main code in here
+}
+```
+
+The following code retrieves data entered into the form's input fields.
+
+```js
+// Get various values entered by user
+let a = parseFloat(document.querySelector("#age").value);
+let h = parseFloat(document.querySelector("#height").value);
+let w_0 = parseFloat(document.querySelector("#weight").value);
+let s, f;
+let sex_value = document.querySelector("input[name=sex]:checked").value;
+let activity_value = document.querySelector("#activity").value;
+let n = parseFloat(document.querySelector("#diet").value);
+```
+
+Next, we validate user input. If a field is left empty or filled with a wrong data type, we exit the `predict` function and the user is automatically shown an error message next to the problematic input.
+
+```js
+if (isNaN(n) || isNaN(h) || isNaN(w_0) || isNaN(a) || sex_value === "") {
+  return;
+}
+```
+
+Recall that from our mathematical model, the numeric values assigned to "sex" and "activity factor" vary. We can handle these using an if-else and switch statement respectively:
+
+```js
+// Set value based on sex
+if (sex_value === "female") {
+  s = -161;
+} else {
+  s = 5;
+}
+
+// Set activity value based on selected activity
+switch (activity_value) {
+  case "sedentary":
+    f = 1.2;
+    break;
+  case "light-exercise":
+    f = 1.3;
+    break;
+  case "moderate-exercise":
+    f = 1.5;
+    break;
+  case "heavy-exercise":
+    f = 1.7;
+    break;
+  case "v-heavy-exercise":
+    f = 1.9;
+    break;
+  default:
+    f = 1.2;
+    break;
+}
+```
+
+Using data entered by the user, we can calculate the integration constant, _c_:
+
+```js
+// Calculate the integration constant
+let k = (n - f * (6.25 * h - 5 * a + s)) / (10 * f);
+let c = w_0 - k;
+```
+
+We will create and populate the table of results using JavaScript. Let's define the table's markup:
+
+```js
+let table_start = `
+            <table>
+              <tr>
+              <th>Month</th>
+              <th>Weight (kg)</th>
+              <th>Monthly change (kg)</th>
+              <th>Total change (kg)</th>
+              </tr>`;
+let table_end = `</table>`;
+let table_data = "";
+```
+
+Defining a few variables that will be used later to populate the table and line chart:
+
+```js
+let w_t;
+// dataset to be used for line chart
+let weightTime = [{ time: 0, weight: w_0 }];
+let textColor;
+```
+
+Using a loop, we shall calculate the weight change for each month, insert the data into the table and also save into the `weightTime` object to be used late to construct the line chart. Notice that the loop goes from 1 to 101. Each iteration of the loop calculates the weight change at the `j`th month. Since the calculations are done for a total of 100 months, the results gotten predict a person's weight change over a period of about 8 years.
+
+```js
+for (let j = 1; j < 101; j++) {
+  // Using the assumption that one month is 30 days
+  let t = j * 30;
+  w_t = c * Math.exp((f * t) / -770) + k;
+  // Rounding to 2 decimal places
+  w_t = Math.round((w_t + Number.EPSILON) * 100) / 100;
+
+  // Create and insert object
+  let obj = {
+    time: j,
+    weight: w_t,
+  };
+  // Populate the line chart dataset
+  weightTime.push(obj);
+
+  let prev_t = (j - 1) * 30;
+  let prev_w_t = c * Math.exp((f * prev_t) / -770) + k;
+  let diff_w_t = w_t - prev_w_t;
+  let diff_w_t_round = Math.round((diff_w_t + Number.EPSILON) * 100) / 100;
+  let diff_w_0 = w_t - w_0;
+  let diff_w_0_round = Math.round((diff_w_0 + Number.EPSILON) * 100) / 100;
+
+  let sign;
+  /* If the weight change is less than starting weight,
+        give text a class corresponding to red color . Otherwise,
+        green text*/
+  /* Put plus sign in front of positive values */
+
+  if (diff_w_t < 0) {
+    textColor = "red";
+    sign = "";
+  } else {
+    textColor = "green";
+    sign = "+";
+  }
+
+  table_data += `
+            <tr>
+            <td> ${j}</td>
+            <td>${w_t}</td>
+            <td class="${textColor}">${sign}${diff_w_t_round}</td>
+            <td class="${textColor}">${sign}${diff_w_0_round}</td>
+            </tr>`;
+}
+```
+
+With the table populated with data, we can now fully build it and show it to the user:
+
+```js
+let table = table_start + table_data + table_end;
+table = new DOMParser().parseFromString(table, "text/xml");
+const output = document.getElementById("table");
+if (output.innerHTML) {
+  // Prevent multiple tables from being added
+  // Force every added table to replace previous table
+  output.innerHTML = "";
+  output.appendChild(table.documentElement);
+} else {
+  output.appendChild(table.documentElement);
+}
+```
+
+Using the `DomParser()` to create a DOM element from a string might lead to some weird layout issues, which are very apparent with table. To fix this issue, we can copy the table and reinsert it to the page again:
+
+```js
+// Workaround to fix table layout bug
+table = output.innerHTML;
+output.innerHTML = table;
+```
+
+A table is a good way to display our data. But it does not adequately visualize the weight changes. It will be nice to have a graphical representation of a person's historical weight change, connected as a series of data points with a continous line. A line chart is ideal in the scenario. The D3.js library helps us do this:
+
+```js
+/* Creating the bar chart */
+// set the dimensions of the graph
+width = Math.min(800, window.innerWidth / 1.1);
+height = Math.max(width, 600);
+
+// append the svg object to the body of the page
+document.getElementById("line-chart").innerHTML = "";
+const svg = d3
+  .select("#line-chart")
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+let lastEl = weightTime[weightTime.length - 1];
+
+// Calculate the axis values
+const xScale = d3
+    .scaleLinear()
+    .domain([0, lastEl.time + 1])
+    .range([0, width / 1.2]),
+  yScale = d3
+    .scaleLinear()
+    .domain([
+      Math.min(w_0 - 5, lastEl.weight - 5),
+      Math.max(w_0 + 2, lastEl.weight + 2),
+    ])
+    .range([height / 1.2, 0]);
+
+const g = svg.append("g").attr("transform", "translate(" + 50 + "," + 50 + ")");
+
+// X-axis label
+svg
+  .append("text")
+  .attr("x", width / 2.2)
+  .attr("y", height / 1.05 + 10)
+  .attr("text-anchor", "middle")
+  .style("font-family", "Helvetica")
+  .style("font-size", 10)
+  .style("font-weight", "bold")
+  .text("Time in months");
+
+// Y-axis label
+svg
+  .append("text")
+  .attr("text-anchor", "middle")
+  .attr("transform", "translate(20," + height / 2 + ")rotate(-90)")
+  .style("font-family", "Helvetica")
+  .style("font-size", 10)
+  .style("font-weight", "bold")
+  .text("Weight in kilograms");
+
+// X-axis scale
+g.append("g")
+  .attr("transform", "translate(0," + height / 1.2 + ")")
+  .call(d3.axisBottom(xScale));
+
+g.append("g").call(d3.axisLeft(yScale));
+
+// Dots
+svg
+  .append("g")
+  .selectAll("dot")
+  .data(weightTime)
+  .enter()
+  .append("circle")
+  .attr("cx", function (d) {
+    return xScale(d.time);
+  })
+  .attr("cy", function (d) {
+    return yScale(d.weight);
+  })
+  .attr("r", 3)
+  .attr("transform", "translate(" + 50 + "," + 50 + ")")
+  .style("fill", textColor);
+
+// Line
+const line = d3
+  .line()
+  .x(function (d) {
+    return xScale(d.time);
+  })
+  .y(function (d) {
+    return yScale(d.weight);
+  })
+  .curve(d3.curveMonotoneX);
+
+svg
+  .append("path")
+  .datum(weightTime)
+  .attr("class", "line")
+  .attr("transform", "translate(" + 50 + "," + 50 + ")")
+  .attr("d", line)
+  .style("fill", "none")
+  .style("stroke", textColor)
+  .style("stroke-width", "2");
+```
+
+Finally, after the table and line chart are built and added to the page, let's automatically scroll down to the output area and display hidden headings:
+
+```js
+// Automatically scroll to the output area after it is output generated
+const anchor = document.createElement("a");
+anchor.setAttribute("href", "#output");
+anchor.click();
+
+// Show hidden text in output area
+const hiddenText = document.querySelectorAll(".output-text");
+for (let m = 0; m < hiddenText.length; m++) {
+  hiddenText[m].style.display = "block";
+}
+```
+
+The [complete source code](https://github.com/enjeck/weight-change-prediction/) is available on GitHub. 
+
+### Credits
+
+- https://en.wikipedia.org/wiki/Basal_metabolic_rate
+- https://clinmedjournals.org/articles/jnmdc/jnmdc-2-016table1.html
+- https://www.researchgate.net/publication/256293379_A_Mathematical_Diet_Model
+- https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3975626/
+- http://jeffq.com/blog/modeling-weight-loss-with-differential-equations/
+c:T6ee,
+The most popular way of calculating the distance between two points on a 
+sphere is using the Haversine equation. 
+If you have the coordinates (longitude and latitude) of the starting and 
+destination locations, you can use this equation to calculate the distance. 
+
+Here's how to calculate the distance in kilometers between two locations using 
+JavaScript and the Geolocation API. 
+
+By default, coordinates obtained from the Geolocation API are given in degrees. 
+We need them in radians for the formula. Here's our conversion function: 
+
+```js
+// Convert from degrees to radians
+function degreesToRadians(degrees) {
+  var radians = (degrees * Math.PI)/180;
+  return radians;
+}
+```
+
+Here's the function to calculate the distance using coordinates (longitude and latitude):
+
+```js
+// Function takes two objects, that contain coordinates to a starting and destination location.
+function calcDistance (startingCoords, destinationCoords){
+  let startingLat = degreesToRadians(startCoords.latitude);
+  let startingLong = degreesToRadians(startCoords.longitude);
+  let destinationLat = degreesToRadians(destCoords.latitude);
+  let destinationLong = degreesToRadians(destCoords.longitude);
+
+  // Radius of the Earth in kilometers
+  let radius = 6571;
+
+  // Haversine equation
+  let distanceInKilometers = Math.acos(Math.sin(startingLat) * Math.sin(destinationLat) +
+  Math.cos(startingLat) * Math.cos(destinationLat) *
+  Math.cos(startingLong - destinationLong)) * radius;
+
+  return distanceInKilometers;
+}
+```
+
+Now, you can call the `calcDistance` function and pass it any two coordinates. 
+For example:
+
+```js
+let sCoords = {
+latitude: 58.39343;
+longitude: -259.2627;
+}
+
+let dCoords = {
+latitude: 43.8394;
+longitude: -129.3984;
+}
+let dist = calcDistance(sCoords, dCoords)
+```
+d:T19a5,
+Knowing a user's location can be a very important feature of a web app. 
+You can use the location information to personalise the user experience,
+give users directions, suggest friends or events in a person's locality, or to
+power a particular feature. 
+
+Whenever you want to build web pages that are location-aware, 
+JavaScript's Geolocation API is great tool. If the user permits 
+(the user gives the browser permission to access their location), you can pinpoint 
+their city, or even more precisely, the street they live in.
+
+Don't confuse the Geolocation API with Google Maps. 
+They are different in many ways. Google Maps API is a library that provides access 
+to Google Maps features like displaying location in a map, or giving directions. 
+Whereas, the Geolocation API's primary purpose is to give information about a person's 
+position on Earth. 
+
+### How the Geolocation API works
+
+To get a person's location, the Geolocation API relies on latitudes and longitudes making a coordinate system. 
+Latitudes and longitudes are imaginary lines (you'll see them drawn on globes) that cover 
+the earth and help with positioning. Latitudes indicate northern/southern points on the 
+Earth, and longitude eastern/western. Every place on Earth has a longitude/latitude value 
+corresponding to its position on planet Earth. For example, New York City is somewhere around 
+latitude 40 and longitude -70.
+
+
+Not only smartphones are location-aware. 
+Nowadays, almost every electronic device can be made location-aware, even a desktop computer. 
+You may be wondering how a browser running on a desktop computer can determine its location 
+when it doesn't have a GPS. Browsers use other methods to find your location without the use of 
+location technologies like GPS.
+
+- **GPS (Global Positioning System)**: Mainly used by modern mobile devices, it can provide
+high-accuracy location information. It uses satellites and can also provide information on altitude and wind speed. 
+- **IP Address**: Every device on the internet has an IP Address. This IP can be mapped to an 
+external database to derive a person's physical location. This method can work anywhere, 
+but is is not very accurate. 
+- **Cell phone triangulation**: This approach uses your distance from cell phone towers to 
+calculate your location. It is pretty accurate, and has the advantage of working indoors, 
+unlike GPS. 
+- **WiFi**: Wi-Fi positioning is based on using access points to triangulate location. 
+It is accurate, fast and can work indoors. 
+
+When building basic geolocation web apps, you don't have to concern yourself with all these 
+various geolocation tactics. Different browsers handle it in their own way. 
+
+Let's begin using the Geolocation API. We'll try to find out where you are (or at least, where your 
+browser thinks you are). 
+
+Save the following starter HTML code in a file. 
+
+```html
+<!doctype html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <title>My Location</title>
+    <script src="location.js"></script>
+    <link rel="stylesheet" href="myLoc.css">
+  </head>
+  <body>
+    <div id="location">
+    </div>
+  </body>
+  </html>
+```
+
+Go ahead a create `location.js` file, inside of which we will write the actual Geolocation code:
+
+```js
+/* Call the function after the page is done loading. */
+window.onload = myLocation;
+
+function myLocation() {
+
+/* Check if the browser supports the Geolocation API. If it does, then 
+the geolocation property exists, and the condition evaluates to true. The 
+navigator.geolocation property is an object that contains the whole geolocation API */
+  if (navigator.geolocation){
+    /* Call the getCurrentPosition method and pass it a function, showLocation, which 
+    we shall soon implement. An API is basically an object with properties and methods. 
+    The Geolocation API has the getCurrentPosition method, which handles the job of getting 
+    the browser's location.*/ 
+    navigator.geolocation.getCurrentPosition(showLocation);
+  }
+  else {
+    // If there's no geolocation support, show an alert
+    alert("Sorry, your browser does not support geolocation."); 
+  }
+}
+
+/* This function is passed a position, containing latitude and longitude values */
+function showLocation(position){ 
+/* Get the latitude and longitude from the position.coords object */
+const latitude = position.coords.latitude;
+const longitude = position.coords.longitude;
+// Show the location on the page
+document.getElementById("location").innerHTML = 
+"You are at Latitude: " + latitude +  ", Longitude: " + longitude;
+}
+```
+
+When you run this code (or any other code using the Geolocation API) for the first time, 
+the browser requests to access your permission. This security check is for privacy reasons, 
+preventing a malicious app from accessing your location without the user's permission. 
+
+That's it. We're done with  getting the user's location. 
+
+### A bit more about the getCurrentPostion() method
+
+Although not shown in the previous code, the `getCurrentPosition` method can take three parameters. 
+The last two parameters are optional:
+
+```
+getCurrentPosition(successHandler, errorHandler, options);
+```
+
+- `successHandler`: A function called if the browser successfully gets your location.
+- `errorHandler`: A function called if the browser fails to determine your location.
+- `options`: An object to customize the location retrieval. It supports:
+  - `enableHighAccuracy`: Suggests the browser use the most accurate method possible (like GPS).
+  - `timeout`: The maximum time (in milliseconds) the browser should wait to get a location.
+  - `maximumAge`: The maximum age (in milliseconds) of a cached location that is acceptable to return.  
+
+In the previous example, we called the geolocation object's `getCurrentPosition` method with 
+a success handler (`showLocation`) function. When our success handler, `showLocation`, 
+is called, it is passed a `position` object containing a coordinates object holding the 
+longitude and latitude, as well as other information about the browser's location. 
+The `position` object has a `coords` property, which can be used to reference the 
+latitudes and longitudes. 
+
+It works like this: 
+1. First, the browser calls `getCurrentPosition`, which triggers the geolocation API 
+to ask the user for permission to access location. 
+2. If the user accepts, geolocation attempts to get the browser's location 
+(via means such as GPS, triangulation, etc discussed earlier), and if successful, it calls 
+the success handler (`showLocation`, in the example), and passes it an object with the 
+coordinates. e:Tde2,
+Created in 1999, SVG has grown to become the most popular vector image format for the web. This article will cover the advantages and disadvantages of SVG (Scalable Vector Graphics) as a format for displaying images on the web. By knowing the pros and cons of SVG, you can better identify the situations where SVG is preferable over other image formats like PNG.
+
+
+## Advantages of SVG
+
+Below are the most noteworthy benefits of using SVG over other formats like JPEG and PNG. 
+
+**1. Easy to create and edit**
+
+SVG files are based on XML (extensible markup language), a set of codes that describes the text in a digital document. This means that you can create and modify SVG files directly in a text editor, just as you would an ordinary text or HTML file. While vector graphic applications like Inkscape and Adobe Illustrator are easier to use, they are not necessary at all!
+
+**2. Scalable**
+
+Raster formats like PNG and JPG become pixelated when resized. Since SVG images are vector images, they do not suffer from loss of quality when resized or zoomed in the browser. This makes them suitable in cases where an image has to be scaled to fit different screen sizes. 
+
+SVG graphics are resolution-independent. Other image formats may require extra assets/data to fix resolution-based issues, depending on the device. For example, in retina screens, a @2x hack is required to display higher-resolution images. SVG doesn’t have such hassles and can be resized easily no matter the device or resolution.
+
+Below, you can see the same image when scaled in different formats. In SVG, the image retains its quality. When scaled in PNG, the image loses its quality and becomes pixelated.
+
+![Vector vs Raster](./vector_vs_raster.png)
+
+**3. Flexible**
+
+SVG is a W3C standard file format. Because of this, it works well with other open standard technologies, including CSS, JavaScript, and HTML. SVG-based images can be manipulated using JavaScript and CSS because they integrate into the DOM because technically, SVG images are XML code, not "real" images. 
+
+**4. Can be animated**
+
+SVG graphics can be animated using JavaScript and CSS, making it a powerful image format building interactive animations on the web. 
+
+**5. Lightweight**
+
+Compared to other formats, SVG images are very small in size. A PNG image can be up to 50 times larger its SVG counterpart at the same dimensions. 
+
+**6. Indexable**
+
+SVG files can be indexed by search engines. This means that they can be used  for SEO (Search Engine Optimization) purposes.
+
+**7. Compressible**
+
+Like other image formats, SVG files can be scripted and compressed.
+
+**8. No unnecessary requests**
+
+Since they are made up of XML, SVG files do not need the browser to request an image from a server, as is being done for standard images. This makes SVGs faster and user-friendlier for the web.
+
+## Disadvantages of SVG
+
+**1. Not detailed**
+
+The SVG image format is great for 2D graphics like logos and icons but is not ideal for detailed pictures. SVG-based graphics can’t display as many details as standard image formats since they are rendered using points and paths instead of pixels
+
+**2. Not fully cross-platform**
+
+Even though SVG has been around since 1999 and is supported by most modern browsers (both on desktop and mobile), it does not work on legacy browsers (like IE8 and below). However, this is rarely an issue for modern web development as the vast majority of users are on browsers that support SVG. 
+
+![SVG Browser Compatibility chart](./SVG-browser-compatibility-chart-1024x461.png)0:{"P":null,"b":"uotnrTcekKu0_b3_xikJJ","c":["","blog"],"q":"","i":false,"f":[[["",{"children":["blog",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/e5da751912c10467.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/chunks/e2fae31b48403321.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/0b32bff5a2dff718.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","link",null,{"rel":"stylesheet","href":"https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"Enjeck's Portfolio\",\"url\":\"https://enjeck.github.io\",\"author\":{\"@type\":\"Person\",\"name\":\"Enjeck\"}}"}}]]}],["$","body",null,{"children":[["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}],[["$","$L4",null,{"strategy":"afterInteractive","src":"https://www.googletagmanager.com/gtag/js?id=G-W8GSQN5XSZ"}],["$","$L4",null,{"id":"google-analytics","strategy":"afterInteractive","children":"\n          window.dataLayer = window.dataLayer || [];\n          function gtag(){dataLayer.push(arguments);}\n          gtag('js', new Date());\n          gtag('config', 'G-W8GSQN5XSZ');\n        "}]]]}]]}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":[["$","$L5",null,{"children":["$","div",null,{"className":"blog-main","children":[["$","h1",null,{"className":"page-heading","children":"Blog"}],["$","$L6",null,{"posts":[{"slug":"download-canvas-image","frontmatter":{"title":"How to download an HTML5 canvas as an image using JavaScript","date":"2022-03-17","categories":["JavaScript","HTML"]},"content":"$7","excerpt":"After drawing to the canvas, you may want to download and save the canvas drawing as an image. To do this, you can use the `toDataURL()` method of the canvas object. \n\nLet's say you have a \"Download\" button in your HTML:\n\nhtml\n    <input type=\"button\" id=\"...","readingTime":2},{"slug":"html5-canvas-watermark","frontmatter":{"title":"Learn HTML5 canvas by building an image watermarking tool","date":"2022-03-15","categories":["JavaScript","HTML"]},"content":"$8","excerpt":"HTML5 canvas allows us to create and manipulate pixels, just like a painter working on a canvas. We can draw text and graphics onto the canvas using JavaScript. To demonstrate its power, let's build an image watermarking tool that allows a user to upload an i...","readingTime":14},{"slug":"ux-writing-tips","frontmatter":{"title":"9 UX writing tips for designers and developers","date":"2022-03-03","categories":["UX"]},"content":"$9","excerpt":"UX writing is the practice of crafting text for digital interfaces that help users interact with products more conveniently. While it is not expected for designers and developers to be professional writers, knowing how to write UX copy is valuable when creati...","readingTime":8},{"slug":"javascript-regex-crash-course","frontmatter":{"title":"JavaScript regular expressions crash course","date":"2022-02-24","categories":["JavaScript"]},"content":"$a","excerpt":"Regular expressions are a method to describe patterns in string data. Regular expressions form a tiny, separate language part of many languages, including JavaScript. \n\nAdmittedly, regular expressions have a cryptic syntax and are often difficult to write. Kn...","readingTime":12},{"slug":"predict-change-differential-equations","frontmatter":{"title":"Predictive modeling of weight changes using differential equations","date":"2021-11-08","categories":["math","javascript"]},"content":"$b","excerpt":"Inspired by my own challenges with weight fluctuations, I wanted to explore how people's weight might change based on calorie consumption. This article details how I went about modelling weight change with differential equations, and building a web applicatio...","readingTime":18},{"slug":"distance-two-locations","frontmatter":{"title":"How to calculate the distance between two locations using JavaScript","date":"2021-09-25","categories":["html","javascript"]},"content":"$c","excerpt":"The most popular way of calculating the distance between two points on a \nsphere is using the Haversine equation. \nIf you have the coordinates (longitude and latitude) of the starting and \ndestination locations, you can use this equation to calculate the dist...","readingTime":2},{"slug":"geolocation-api","frontmatter":{"title":"How to get a user's location using the Geolocation API","date":"2021-09-25","categories":["html","javascript"]},"content":"$d","excerpt":"Knowing a user's location can be a very important feature of a web app. \nYou can use the location information to personalise the user experience,\ngive users directions, suggest friends or events in a person's locality, or to\npower a particular feature. \n\nWhen...","readingTime":5},{"slug":"svg-advantages-disadvantages","frontmatter":{"title":"Advantages and disadvantages of SVG","date":"2021-09-25","categories":["design","svg"]},"content":"$e","excerpt":"Created in 1999, SVG has grown to become the most popular vector image format for the web. This article will cover the advantages and disadvantages of SVG (Scalable Vector Graphics) as a format for displaying images on the web. By knowing the pros and cons of...","readingTime":3}]}]]}]}],["$Lf","$L10"],"$L11"]}],{},null,false,false]},null,false,false]},null,false,false],"$L12",false]],"m":"$undefined","G":["$13",[]],"S":true}
+14:I[27271,["/_next/static/chunks/b42444546cf1924e.js","/_next/static/chunks/8578e6e2b7d87452.js"],"OutletBoundary"]
+15:"$Sreact.suspense"
+17:I[27271,["/_next/static/chunks/b42444546cf1924e.js","/_next/static/chunks/8578e6e2b7d87452.js"],"ViewportBoundary"]
+19:I[27271,["/_next/static/chunks/b42444546cf1924e.js","/_next/static/chunks/8578e6e2b7d87452.js"],"MetadataBoundary"]
+f:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/69ef5a39cc4d8dfb.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]
+10:["$","script","script-0",{"src":"/_next/static/chunks/1b66c0a83b60540d.js","async":true,"nonce":"$undefined"}]
+11:["$","$L14",null,{"children":["$","$15",null,{"name":"Next.MetadataOutlet","children":"$@16"}]}]
+12:["$","$1","h",{"children":[null,["$","$L17",null,{"children":"$@18"}],["$","div",null,{"hidden":true,"children":["$","$L19",null,{"children":["$","$15",null,{"name":"Next.Metadata","children":"$@1a"}]}]}],null]}]
+18:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, maximum-scale=5"}]]
+1b:I[63559,["/_next/static/chunks/b42444546cf1924e.js","/_next/static/chunks/8578e6e2b7d87452.js"],"IconMark"]
+1a:[["$","title","0",{"children":"Blog - Technical Writing & Development Insights | Enjeck"}],["$","meta","1",{"name":"description","content":"Technical articles about JavaScript, React, Next.js, web development, UX writing, and software engineering best practices by Enjeck."}],["$","link","2",{"rel":"author","href":"https://enjeck.github.io"}],["$","meta","3",{"name":"author","content":"Enjeck"}],["$","meta","4",{"name":"keywords","content":"technical blog,web development,JavaScript tutorials,React guides,Next.js,programming articles"}],["$","meta","5",{"name":"creator","content":"Enjeck"}],["$","meta","6",{"name":"robots","content":"index, follow"}],["$","meta","7",{"name":"googlebot","content":"index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"}],["$","meta","8",{"property":"og:title","content":"Blog - Technical Writing & Development Insights"}],["$","meta","9",{"property":"og:description","content":"Technical articles about web development and software engineering"}],["$","meta","10",{"property":"og:type","content":"website"}],["$","meta","11",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","12",{"name":"twitter:title","content":"Enjeck - Software Engineer & Technical Writer"}],["$","meta","13",{"name":"twitter:description","content":"Portfolio showcasing web development projects and technical writing"}],["$","link","14",{"rel":"icon","href":"/favicon.ico?favicon.0b3bf435.ico","sizes":"256x256","type":"image/x-icon"}],["$","$L1b","15",{}]]
+16:null

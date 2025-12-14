@@ -1,0 +1,206 @@
+1:"$Sreact.fragment"
+2:I[36427,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/cbec149b17a636bf.js","/_next/static/chunks/ad06993566a63284.js"],"default"]
+3:I[73235,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/cbec149b17a636bf.js","/_next/static/chunks/ad06993566a63284.js"],"default"]
+4:I[47038,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/cbec149b17a636bf.js","/_next/static/chunks/ad06993566a63284.js"],""]
+5:I[98374,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/cbec149b17a636bf.js","/_next/static/chunks/ad06993566a63284.js"],"default"]
+47:I[27271,["/_next/static/chunks/b42444546cf1924e.js","/_next/static/chunks/8578e6e2b7d87452.js"],"OutletBoundary"]
+48:"$Sreact.suspense"
+:HL["/filled-rect.png","image"]
+:HL["/watermark-interface.png","image"]
+:HL["/load-image-watermark.png","image"]
+:HL["/watermarked-image.png","image"]
+:HL["/font-test.png","image"]
+:HL["/_next/static/chunks/69ef5a39cc4d8dfb.css","style"]
+0:{"buildId":"uotnrTcekKu0_b3_xikJJ","rsc":["$","$1","c",{"children":[[["$","$L2",null,{}],["$","$L3",null,{"children":[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BlogPosting\",\"headline\":\"Learn HTML5 canvas by building an image watermarking tool\",\"datePublished\":\"2022-03-15\",\"author\":{\"@type\":\"Person\",\"name\":\"Enjeck\"},\"publisher\":{\"@type\":\"Person\",\"name\":\"Enjeck\"}}"}}],["$","article",null,{"className":"blogpost-content","children":[["$","div",null,{"className":"centered","children":[["$","$L4",null,{"href":"/blog","style":{"borderBottom":"2px dotted var(--dark-black)","padding":"10px 20px"},"children":"← Back to blog"}],["$","h1",null,{"className":"blogpost-title","children":["$","span",null,{"children":"Learn HTML5 canvas by building an image watermarking tool"}]}],["$","div",null,{"className":"post-meta","children":[["$","time",null,{"className":"date","dateTime":"2022-03-15","children":"2022-03-15"}],["$","span",null,{"className":"reading-time","children":[14," min read"]}]]}]]}],["$","div",null,{"className":"blog-body","children":[["$","p",null,{"children":"HTML5 canvas allows us to create and manipulate pixels, just like a painter working on a canvas. We can draw text and graphics onto the canvas using JavaScript. To demonstrate its power, let's build an image watermarking tool that allows a user to upload an image and watermark it with text."}],"\n",["$","h2",null,{"children":"Adding the canvas into a web page"}],"\n",["$","p",null,{"children":["Before you begin, create a file called ",["$","code",null,{"children":"index.html"}],". Here, we will write most of our code."]}],"\n",["$","p",null,{"children":["The HTML5 canvas can be added to a page just like any other element. It starts with an opening ",["$","code",null,{"children":"<canvas>"}]," tag and closes with ",["$","code",null,{"children":"</canvas>"}],". Like other HTML elements, it can take attributes like ",["$","code",null,{"children":"id"}]," for identification, ",["$","code",null,{"children":"width"}]," to define the horizontal length in pixels, and ",["$","code",null,{"children":"height"}]," to define the vertical area of the page it occupies."]}],"\n",["$","p",null,{"children":"The canvas in the following code is 600 pixels wide and 600 pixels high."}],"\n",["$","$L5",null,{"children":["$","code",null,{"className":"language-html","children":"<!doctype html>\n<html lang=\"en\">\n    <head>\n        <title>Watermark</title>\n        <meta charset=\"utf-8\">\n    </head>\n    <body>\n        <canvas id=\"canvas\" width=\"600\" height=\"600\"></canvas>\n    </body>\n    <style>\n        canvas {\n            border: 1px solid #000;\n        }\n    </style>\n    <script>\n    </script>\n</html>\n"}]}],"\n",["$","p",null,{"children":"Go ahead and save the code as an HTML file and load it into a browser."}],"\n",["$","p",null,{"children":["To see our canvas, we have given it a tiny black border, defined within the ",["$","code",null,{"children":"style"}]," tags. Without this border, a blank white page is shown and we won't know exactly where the canvas is. For now, we'll write JavaScript code between the ",["$","code",null,{"children":"script"}]," tags."]}],"\n",["$","p",null,{"children":"A page can have as many canvas elements as we like. Since the canvas is transparent, it can be placed on top of other elements. This allows us to draw on top of an image or something else."}],"\n",["$","p",null,{"children":["Notice that we set the width and height of the canvas as an inline style on the element itself, and not as CSS styles within the ",["$","code",null,{"children":"<style>"}]," tag. That's because the ",["$","code",null,{"children":"height"}]," and ",["$","code",null,{"children":"width"}]," attributes work differently with the canvas, compared to other elements. The default dimension of the canvas is 300px by 150px -- it takes these values when the height and width HTML attributes are not explicitly set. If you later set the dimensions in CSS, say 600px by 600px, the canvas scales from its default size of 300 by 150 to fit this size, and everything drawn in the canvas scales with it. This might cause some pixelation issues (pixels get stretched and appear chunky), similar to what occurs when you resize a raster image. By making the canvas bigger (or smaller, if you prefer), anything drawn in it will be scaled to fit the specified dimensions."]}],"\n","$L6","\n","$L7","\n","$L8","\n","$L9","\n","$La","\n","$Lb","\n","$Lc","\n","$Ld","\n","$Le","\n","$Lf","\n","$L10","\n","$L11","\n","$L12","\n","$L13","\n","$L14","\n","$L15","\n","$L16","\n","$L17","\n","$L18","\n","$L19","\n","$L1a","\n","$L1b","\n","$L1c","\n","$L1d","\n","$L1e","\n","$L1f","\n","$L20","\n","$L21","\n","$L22","\n","$L23","\n","$L24","\n","$L25","\n","$L26","\n","$L27","\n","$L28","\n","$L29","\n","$L2a","\n","$L2b","\n","$L2c","\n","$L2d","\n","$L2e","\n","$L2f","\n","$L30","\n","$L31","\n","$L32","\n","$L33","\n","$L34","\n","$L35","\n","$L36","\n","$L37","\n","$L38","\n","$L39","\n","$L3a","\n","$L3b","\n","$L3c","\n","$L3d","\n","$L3e"]}],"$L3f","$L40"]}]]}]],["$L41","$L42","$L43"],"$L44"]}],"loading":null,"isPartial":false}
+6:["$","h2",null,{"children":"Drawing on the canvas"}]
+7:["$","p",null,{"children":"Let's begin writing some JavaScript between our script tags:"}]
+8:["$","$L5",null,{"children":["$","code",null,{"className":"language-js","children":"// Start drawing after the page is fully loaded. \n     window.onload = function(){\n     // Get the canvas element, where we shall draw the background elements. \n       const canvas = document.getElementById(\"canvas\");\n       // To draw, we need to select a context for the canvas, 2d in this case, since we're drawing 2d items. \n        const context = canvas.getContext(\"2d\");\n     }\n\n"}]}]
+9:["$","p",null,{"children":"In the code above, we get the canvas element we created. Before we can draw, we must set an interface by getting a context. The context defines the properties and methods used to draw on the canvas. Here, we use a 2D context."}]
+a:["$","p",null,{"children":"Using JavaScript to check for canvas support might be a bit of an overkill, depending on what you are trying to do. JavaScript's power comes into play when you want to provide users with a different experience (such as displaying another content or redirecting to another page) when there's no canvas support."}]
+b:["$","p",null,{"children":"If you intend to just display some backup text when the canvas is not supported, it suffices to just use plain HTML."}]
+c:["$","p",null,{"children":"When a supported element (such as text or image) is placed within the canvas element, it will be displayed if the canvas is not supported. By default, whenever a browser sees an element it does not recognize, it displays any text within the element."}]
+d:["$","$L5",null,{"children":["$","code",null,{"className":"language-html","children":"<canvas id=\"canvas\">\nNo canvas support. Please upgrade. \n</canvas>\n"}]}]
+e:["$","p",null,{"children":"With the code above, browsers without canvas support will display the text \"No canvas support. Please upgrade\", whereas, capable browsers ignore any text within the canvas tags and instead shows drawings generated via JavaScript."}]
+f:["$","h2",null,{"children":"Drawing a basic shape"}]
+10:["$","p",null,{"children":["Before we jump into the main watermarking application, let's test the canvas by drawing a simple shape.\nTo draw a rectangle, we use the ",["$","code",null,{"children":"fillRect()"}]," method. It takes 4 arguments, corresponding to the ",["$","em",null,{"children":"x position"}],", ",["$","em",null,{"children":"y position"}],", ",["$","em",null,{"children":"width"}],", and ",["$","em",null,{"children":"height"}],"."]}]
+11:["$","$L5",null,{"children":["$","code",null,{"className":"language-js","children":"<script>\n     window.onload = function(){\n       const canvas = document.getElementById(\"canvas\");\n        let context = canvas.getContext(\"2d\");\n         context.fillRect(0, 0, 100, 100)\n     }\n</script>\n"}]}]
+12:["$","p",null,{"children":["The code ",["$","code",null,{"children":"context.fillRect(0, 0, 100, 100)"}]," creates a rectangle starting from the top left, with dimensions 100 x 100 pixels. This rectangle is colored black, which is the default fill color for the canvas."]}]
+13:["$","p",null,{"children":["$","img",null,{"src":"/filled-rect.png","alt":""}]}]
+14:["$","p",null,{"children":["To draw a rectangle with a stroke rather than fill, we would use the ",["$","code",null,{"children":"strokeRect()"}]," method rather than ",["$","code",null,{"children":"fillRect()"}],". If you now load ",["$","code",null,{"children":"index.html"}]," in your browser, you should see something like this:"]}]
+15:["$","p",null,{"children":["Great, our canvas is up and running. We have tested it out, and it works. Go ahead and delete the ",["$","code",null,{"children":"context.fillRect(0, 0, 100, 100)"}]," code. We don't need it anymore."]}]
+16:["$","h2",null,{"children":"Building the app interface"}]
+17:["$","p",null,{"children":"Before we begin implementing the watermarking app, let's consider its interface and features:"}]
+18:["$","ul",null,{"children":["\n",["$","li",null,{"children":"There is a canvas element, along with form elements that act as the user interface."}],"\n",["$","li",null,{"children":"The form will have input fields like a \"browse\" button to upload an image, a text input to enter the watermark text, select fields for choosing the text color, text size, text background, the position of text on the image, and a preview button."}],"\n",["$","li",null,{"children":"We'll grab user input from the form and use it to draw on the canvas using JavaScript."}],"\n",["$","li",null,{"children":"The preview button will prompt JavaScript to retrieve user input and print data on canvas."}],"\n",["$","li",null,{"children":"Optionally, we can add a download button for saving the finished watermarked image."}],"\n"]}]
+19:["$","p",null,{"children":"To begin with, here's the HTML code:"}]
+1a:["$","$L5",null,{"children":["$","code",null,{"className":"language-html","children":"<!doctype html>\n<html lang=\"en\">\n    <head>\n        <title>Watermark</title>\n        <meta charset=\"utf-8\" />\n        <style>\n            canvas {\n              border: 1px solid black;\n              }\n        </style>\n    </head>\n    <body>\n       <h1> Watermarker </h1>\n        <canvas id=\"canvas\" width=\"600\" height=\"400\">\n          <p> No canvas support. Please upgrade your browser. </p>\n        </canvas>\n        <form>\n            </form>\n\n            <script src=\"watermark.js\"></script>\n    </body>\n</html>\n"}]}]
+1b:["$","p",null,{"children":["We have moved our script code to a ",["$","code",null,{"children":"watermark.js"}]," file and linked it to it within the ",["$","code",null,{"children":"<head>"}],". The canvas still has the fallback text for old browsers that do not support the canvas API."]}]
+1c:["$","p",null,{"children":["Also, there is a ",["$","code",null,{"children":"<form>"}]," element containing controls that support the watermarking features."]}]
+1d:["$","p",null,{"children":["Let's add the ",["$","code",null,{"children":"<form>"}]," data. This form serves as the user interface."]}]
+45:T85d,    <form>
+      <!-- Where the user selects an image -->
+      <p>
+        <label for="imageLoader" id="imageLoaderLabel">Choose an image:</label><br />
+        <input type="file" id="imageLoader" name="imageLoader" />
+      </p>
+
+      <!-- Where the user enters the text to be used as a watermark -->
+      <p>
+        <label for="watermarkText">Enter the text to use:</label><br />
+        <input type="text" id="watermarkText" name="watermarkText" />
+      </p>
+
+      <!-- Where the user  selects the position of the text on the image. Feel free to add more options-->
+      <p>
+        <label for="textPosition">Position of text:</label><br />
+        <select id="textPosition">
+          <option value="bottom-left">Bottom Left</option>
+          <option value="center"> Center </option>
+        </select>
+      </p>
+
+      <!-- Where the user  selects the color of the text on the image. Feel free to add more options-->
+      <p>
+        <label for="textColor">Color of text:</label><br />
+        <select id="textColor">
+          <option value="black">black</option>
+          <option value="blue">blue</option>
+          <option value="red">red</option>
+        </select>
+      </p>
+
+      <!-- Another selection control for choosing the font of the text. Feel free to add more options-->
+      <p>
+        <label for="textFont">Text font:</label><br />
+        <select id="textFont">
+          <option value="arial">Arial</option>
+          <option value="helvetica">Helvetica</option>
+          <option value="monospace">Monospace</option>
+        </select>
+      </p>
+
+      <!-- Another selection control for choosing the color of the text background. Feel free to add more options-->
+      <p>
+        <label for="textBgColor">Text background color:</label><br />
+        <select id="textBgColor">
+          <option value="black">black</option>
+          <option value="white">white</option>
+          <option value="transparent">transparent</option>
+        </select>
+      </p>
+
+      <!-- Buttons to preview or download the watermarked image -->
+
+      <input type="button" id="previewBtn" value="Preview">
+
+    </form>
+1e:["$","$L5",null,{"children":["$","code",null,{"className":"language-html","children":"$45"}]}]
+1f:["$","p",null,{"children":["$","img",null,{"src":"/watermark-interface.png","alt":""}]}]
+20:["$","p",null,{"children":"We've dealt with the markup. Now, we can handle the script."}]
+21:["$","p",null,{"children":["Let's start by writing code to load a selected image to the canvas when the \"browse...\" (",["$","code",null,{"children":"id = imageLoader"}],") button is clicked."]}]
+22:["$","p",null,{"children":["Add the following code into ",["$","code",null,{"children":"watermark.js"}],":"]}]
+23:["$","$L5",null,{"children":["$","code",null,{"className":"language-js","children":"// Select the \"browse\" button, used to choose the image\nconst imageLoader = document.getElementById('imageLoader');\n\n/* When the user selects an image, call the loadImage function */\n    imageLoader.addEventListener('change', loadImage, false);\n\n// Select the canvas and give it a 2d context \nconst canvas = document.getElementById('canvas');\nconst ctx = canvas.getContext('2d');\n\n"}]}]
+24:["$","p",null,{"children":["The event listener calls the ",["$","code",null,{"children":"loadImage()"}]," function, which is defined below. It reads the selected image using the ",["$","code",null,{"children":"FileReader"}]," object and draws it onto the canvas using ",["$","code",null,{"children":"drawImage()"}],"."]}]
+25:["$","$L5",null,{"children":["$","code",null,{"className":"language-js","children":"function loadImage(e){\n    // Read the selected image \n    const reader = new FileReader();\n    reader.onload = function(event){\n        const img = new Image();\n        img.onload = function(){\n            /* Set the width and height of the canvas to\n             match the size of the chosen image */\n            canvas.width = img.width;\n            canvas.height = img.height;\n            // Draw the image on the canvas\n            ctx.drawImage(img,0,0);\n        }\n        img.src = event.target.result;\n        /* Delete the image loader with the prompt to \"Choose an image\" after an image is chosen */\n        document.getElementById('imageLoaderLabel').remove();\n    }\n    reader.readAsDataURL(e.target.files[0]);     \n}\n"}]}]
+26:["$","p",null,{"children":["If you visit ",["$","code",null,{"children":"index.html"}]," in a browser, you should be able to select an image and it will be loaded to the canvas."]}]
+27:["$","p",null,{"children":["$","img",null,{"src":"/load-image-watermark.png","alt":""}]}]
+28:["$","p",null,{"children":["Next, let's enable the \"preview\" (",["$","code",null,{"children":"id=\"previewBtn\""}],") button by making it call a JavaScript function when it is clicked."]}]
+29:["$","$L5",null,{"children":["$","code",null,{"className":"language-js","children":"window.onload = function() {\n    // Get the preview button element\n    const button = document.getElementById(\"previewBtn\");\n    /* Add a click handler to the button so that\n    the previewImage function is called when clicked */\n    button.onclick = previewImage;\n    };\n"}]}]
+2a:["$","p",null,{"children":["Now, when the preview button is clicked, the ",["$","code",null,{"children":"previewImage()"}]," function is called. Within this function, we shall later add code to watermark the image loaded into the canvas."]}]
+2b:["$","p",null,{"children":["Let's start writing the ",["$","code",null,{"children":"previewImage()"}]," function. For the most part, we will use the ",["$","code",null,{"children":"fillText()"}]," method. It takes four arguments, corresponding to the actual text, x position, y position, and optionally, the maximum width of the text). It fills the provided text at the (x, y) position of the canvas. The code ",["$","code",null,{"children":"context.fillText(\"hello\", 100, 100)"}]," creates a text \"hello\" starting 100 pixels from the left and top."]}]
+46:T9da,function previewImage() {
+  // Select the canvas and give it a 2d context
+  let canvas = document.getElementById("canvas");
+  let ctx = canvas.getContext("2d");
+
+  /* Get the value of element with an id of "watermarkText" */
+  let wmText = document.getElementById("watermarkText").value;
+
+  /* If there's actually some text*/
+  if(wmText) {
+
+    /* Find out what options the user has chosen by 
+    getting the indices of the selected items */
+
+    // Get the selected text position 
+    let selectPos = document.getElementById("textPosition");
+    let posIndex = selectPos.selectedIndex;
+    let position = selectPos[posIndex].value;
+
+    // Get the selected text color
+    let selectCol = document.getElementById("textColor");
+    let colIndex = selectCol.selectedIndex;
+    let color = selectCol[colIndex].value;
+
+    // Get the selected text color 
+    let selectFont = document.getElementById("textFont");
+    let fontIndex = selectFont.selectedIndex;
+    let font = selectFont[fontIndex].value;
+
+    // Give text a size of 40px and assign it to the selected font
+    let textSize = 40
+    ctx.font = `${textSize}px ${font}`;
+
+    // Get the width and height of the canvas
+    let w = canvas.width;
+    let h = canvas.height;
+
+    // Get width of the text
+    let text = ctx.measureText(wmText);
+    let textWidth = text.width;
+
+    // Get the selected text background color 
+    let selectBgColor = document.getElementById("textBgColor");
+    let bgIndex = selectBgColor.selectedIndex;
+    let bgColor = selectBgColor[bgIndex].value;
+
+    /* Position the text on the image based on the selected position */
+    if (position == "center") {
+
+        // Color the background with the selected color using the fillStyle property
+        ctx.fillStyle = bgColor;
+        /* Draw the background using the fillStyle property. The x, y positions, width
+        and height are based on the width of the text */
+        ctx.fillRect(w/2 - textWidth/2, h/2-textSize, textWidth*1.2, textSize*1.5);
+        
+        // Fill the context (and text) with selected color
+         ctx.fillStyle = color;
+         // Draw the text using the fillText() method
+         ctx.fillText(wmText, w/2 - textWidth/2.3, h/2);
+    }
+
+    else if (position == "bottom-left") {
+        
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(w - (w - 2), h - textSize, textWidth*1.2, textSize*1.5);
+        // Fill context (and text) with selected color
+        ctx.fillStyle = color;
+        ctx.fillText(wmText, w - (w - 10), h - 10);
+    }
+  }
+}
+2c:["$","$L5",null,{"children":["$","code",null,{"className":"language-js","children":"$46"}]}]
+2d:["$","p",null,{"children":"With the above code, we're pretty much done. You can select an image, type some text into the interface, select colors and fonts. When you click \"preview\", the text will be drawn on the image using the selected properties."}]
+2e:["$","p",null,{"children":["$","img",null,{"src":"/watermarked-image.png","alt":""}]}]
+2f:["$","p",null,{"children":["Note that the ",["$","code",null,{"children":"selectedIndex"}]," property returns the index of the option currently selected in a dropdown. The list of options is converted to an array, and each element can be selected from the array using the index (0-indexed)."]}]
+30:["$","p",null,{"children":["The ",["$","code",null,{"children":"fillText()"}]," method accepts the text to draw on the canvas along with its x and y positions. There are various methods for setting the text font, size, and more. Just like with rectangles, we can set text stroke and fill using ",["$","code",null,{"children":"fillText()"}]," and ",["$","code",null,{"children":"strokeText()"}]," respectively. Both methods take four arguments: the text to draw, the x position, y position, and optionally, the max-width (forces the text to scale if it's wider than the provided max-width)."]}]
+31:["$","p",null,{"children":["The font of a piece of text is controlled via the context using ",["$","code",null,{"children":"font"}]," property. This property is set using the same format as in CSS. If we specify every property value, we'll set (in this order): font style, font weight, font size, and font family. For example:"]}]
+32:["$","$L5",null,{"children":["$","code",null,{"className":"language-js","children":"let canvas = document.getElementById(\"canvas\");\nlet ctx = canvas.getContext(\"2d\");\nctx.font = \"3em monospace\";\nctx.fillText(\"Hello, how are you?\", 100, 50);\nctx.font = \"italic bold 2em serif\";\nctx.fillText(\"Hola, ¿cómo estás?\", 100, 100);\n"}]}]
+33:["$","p",null,{"children":"The above code produces the following results:"}]
+34:["$","p",null,{"children":["$","img",null,{"src":"/font-test.png","alt":""}]}]
+35:["$","p",null,{"children":"The canvas does not have a direct way of creating text with a background. An easy workaround is to draw a rectangle and place it below the text, making it look like a background."}]
+36:["$","p",null,{"children":["Let's take a closer look at ",["$","code",null,{"children":"fillStyle"}],". It is a context property that holds the color of anything drawn on the canvas. It accepts color names (like red, black. green) and values like ",["$","code",null,{"children":"#0000"}]," or ",["$","code",null,{"children":"rgb(0,0,0)"}],"."]}]
+37:["$","$L5",null,{"children":["$","code",null,{"className":"language-js","children":"ctx.fillStyle = color;\n"}]}]
+38:["$","p",null,{"children":["Notice that since the text background and text color are usually different values, we have to set ",["$","code",null,{"children":"fillStyle"}]," multiple times. You might expect us to set the rectangle color and text color using the ",["$","code",null,{"children":"fillRect()"}]," and ",["$","code",null,{"children":"fillText()"}]," methods respectively, but that is not how the canvas works."]}]
+39:["$","p",null,{"children":["The canvas context is an object that maintains a state. With ",["$","code",null,{"children":"fillStyle"}],", we update this state, telling the canvas that any subsequent shapes should use this color. This color persists until ",["$","code",null,{"children":"fillStyle"}]," is updated again."]}]
+3a:["$","h3",null,{"children":"Downloading an image from the canvas"}]
+3b:["$","p",null,{"children":["If you want to go further, you can ",["$","a",null,{"href":"/blog/download-canvas-image","children":"add download functionality"}]," so that the watermarked image can be downloaded and saved to the user's device. This can be done using the ",["$","code",null,{"children":"toDataURL()"}]," method of the canvas object."]}]
+3c:["$","h2",null,{"children":"Summary"}]
+3d:["$","p",null,{"children":"Here are the canvas basics we covered in this tutorial:"}]
+3e:["$","ul",null,{"children":["\n",["$","li",null,{"children":"The canvas is an element that provides a drawing space on a web page"}],"\n",["$","li",null,{"children":"You specify the width and height of the canvas using the width and height attributes on the element"}],"\n",["$","li",null,{"children":"Everything drawn on the canvas is done using JavaScript"}],"\n",["$","li",null,{"children":"Before you can draw on the canvas, you must first create a context that provides a kind of interface (e.g 2D)."}],"\n",["$","li",null,{"children":["To create a rectangle, use the context ",["$","code",null,{"children":"fillRect()"}]," method. This draws a rectangle filled with color."]}],"\n",["$","li",null,{"children":["To create a rectangle outline, use ",["$","code",null,{"children":"strokeRect()"}]," method"]}],"\n",["$","li",null,{"children":["to draw text in the canvas, use the ",["$","code",null,{"children":"fillText()"}]," method. You can specify the position, color, style, and other text properties using context properties."]}],"\n",["$","li",null,{"children":["When you set a context property, such as ",["$","code",null,{"children":"fillStyle"}],", it applied to every drawing that follows until you change the property to a different value."]}],"\n",["$","li",null,{"children":["To draw an image on the canvas, use the ",["$","code",null,{"children":"drawImage()"}]," method."]}],"\n"]}]
+3f:["$","hr",null,{}]
+40:["$","nav",null,{"className":"post-navigation","aria-label":"Post navigation","children":[["$","h3",null,{"children":" Read other posts"}],["$","ul",null,{"children":[["$","li",null,{"children":["$","$L4",null,{"href":"/blog/ux-writing-tips","children":["← ","9 UX writing tips for designers and developers"]}]}],["$","li",null,{"children":["$","$L4",null,{"href":"/blog/download-canvas-image","children":["How to download an HTML5 canvas as an image using JavaScript"," →"]}]}]]}]]}]
+41:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/69ef5a39cc4d8dfb.css","precedence":"next"}]
+42:["$","script","script-0",{"src":"/_next/static/chunks/cbec149b17a636bf.js","async":true}]
+43:["$","script","script-1",{"src":"/_next/static/chunks/ad06993566a63284.js","async":true}]
+44:["$","$L47",null,{"children":["$","$48",null,{"name":"Next.MetadataOutlet","children":"$@49"}]}]
+49:null

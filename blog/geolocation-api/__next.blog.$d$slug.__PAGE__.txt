@@ -1,0 +1,62 @@
+1:"$Sreact.fragment"
+2:I[36427,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/cbec149b17a636bf.js","/_next/static/chunks/ad06993566a63284.js"],"default"]
+3:I[73235,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/cbec149b17a636bf.js","/_next/static/chunks/ad06993566a63284.js"],"default"]
+4:I[47038,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/cbec149b17a636bf.js","/_next/static/chunks/ad06993566a63284.js"],""]
+1b:I[98374,["/_next/static/chunks/0b32bff5a2dff718.js","/_next/static/chunks/cbec149b17a636bf.js","/_next/static/chunks/ad06993566a63284.js"],"default"]
+1d:I[27271,["/_next/static/chunks/b42444546cf1924e.js","/_next/static/chunks/8578e6e2b7d87452.js"],"OutletBoundary"]
+1e:"$Sreact.suspense"
+:HL["/_next/static/chunks/69ef5a39cc4d8dfb.css","style"]
+0:{"buildId":"uotnrTcekKu0_b3_xikJJ","rsc":["$","$1","c",{"children":[[["$","$L2",null,{}],["$","$L3",null,{"children":[["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"BlogPosting\",\"headline\":\"How to get a user's location using the Geolocation API\",\"datePublished\":\"2021-09-25\",\"author\":{\"@type\":\"Person\",\"name\":\"Enjeck\"},\"publisher\":{\"@type\":\"Person\",\"name\":\"Enjeck\"}}"}}],["$","article",null,{"className":"blogpost-content","children":[["$","div",null,{"className":"centered","children":[["$","$L4",null,{"href":"/blog","style":{"borderBottom":"2px dotted var(--dark-black)","padding":"10px 20px"},"children":"← Back to blog"}],["$","h1",null,{"className":"blogpost-title","children":["$","span",null,{"children":"How to get a user's location using the Geolocation API"}]}],["$","div",null,{"className":"post-meta","children":[["$","time",null,{"className":"date","dateTime":"2021-09-25","children":"2021-09-25"}],["$","span",null,{"className":"reading-time","children":[5," min read"]}]]}]]}],["$","div",null,{"className":"blog-body","children":[["$","p",null,{"children":"Knowing a user's location can be a very important feature of a web app.\nYou can use the location information to personalise the user experience,\ngive users directions, suggest friends or events in a person's locality, or to\npower a particular feature."}],"\n",["$","p",null,{"children":"Whenever you want to build web pages that are location-aware,\nJavaScript's Geolocation API is great tool. If the user permits\n(the user gives the browser permission to access their location), you can pinpoint\ntheir city, or even more precisely, the street they live in."}],"\n",["$","p",null,{"children":"Don't confuse the Geolocation API with Google Maps.\nThey are different in many ways. Google Maps API is a library that provides access\nto Google Maps features like displaying location in a map, or giving directions.\nWhereas, the Geolocation API's primary purpose is to give information about a person's\nposition on Earth."}],"\n",["$","h3",null,{"children":"How the Geolocation API works"}],"\n",["$","p",null,{"children":"To get a person's location, the Geolocation API relies on latitudes and longitudes making a coordinate system.\nLatitudes and longitudes are imaginary lines (you'll see them drawn on globes) that cover\nthe earth and help with positioning. Latitudes indicate northern/southern points on the\nEarth, and longitude eastern/western. Every place on Earth has a longitude/latitude value\ncorresponding to its position on planet Earth. For example, New York City is somewhere around\nlatitude 40 and longitude -70."}],"\n",["$","p",null,{"children":"Not only smartphones are location-aware.\nNowadays, almost every electronic device can be made location-aware, even a desktop computer.\nYou may be wondering how a browser running on a desktop computer can determine its location\nwhen it doesn't have a GPS. Browsers use other methods to find your location without the use of\nlocation technologies like GPS."}],"\n",["$","ul",null,{"children":["\n",["$","li",null,{"children":[["$","strong",null,{"children":"GPS (Global Positioning System)"}],": Mainly used by modern mobile devices, it can provide\nhigh-accuracy location information. It uses satellites and can also provide information on altitude and wind speed."]}],"\n",["$","li",null,{"children":[["$","strong",null,{"children":"IP Address"}],": Every device on the internet has an IP Address. This IP can be mapped to an\nexternal database to derive a person's physical location. This method can work anywhere,\nbut is is not very accurate."]}],"\n",["$","li",null,{"children":[["$","strong",null,{"children":"Cell phone triangulation"}],": This approach uses your distance from cell phone towers to\ncalculate your location. It is pretty accurate, and has the advantage of working indoors,\nunlike GPS."]}],"\n","$L5","\n"]}],"\n","$L6","\n","$L7","\n","$L8","\n","$L9","\n","$La","\n","$Lb","\n","$Lc","\n","$Ld","\n","$Le","\n","$Lf","\n","$L10","\n","$L11","\n","$L12","\n","$L13","\n","$L14"]}],"$L15","$L16"]}]]}]],["$L17","$L18","$L19"],"$L1a"]}],"loading":null,"isPartial":false}
+5:["$","li",null,{"children":[["$","strong",null,{"children":"WiFi"}],": Wi-Fi positioning is based on using access points to triangulate location.\nIt is accurate, fast and can work indoors."]}]
+6:["$","p",null,{"children":"When building basic geolocation web apps, you don't have to concern yourself with all these\nvarious geolocation tactics. Different browsers handle it in their own way."}]
+7:["$","p",null,{"children":"Let's begin using the Geolocation API. We'll try to find out where you are (or at least, where your\nbrowser thinks you are)."}]
+8:["$","p",null,{"children":"Save the following starter HTML code in a file."}]
+9:["$","$L1b",null,{"children":["$","code",null,{"className":"language-html","children":"<!doctype html>\n  <html>\n  <head>\n    <meta charset=\"utf-8\">\n    <title>My Location</title>\n    <script src=\"location.js\"></script>\n    <link rel=\"stylesheet\" href=\"myLoc.css\">\n  </head>\n  <body>\n    <div id=\"location\">\n    </div>\n  </body>\n  </html>\n"}]}]
+a:["$","p",null,{"children":["Go ahead a create ",["$","code",null,{"children":"location.js"}]," file, inside of which we will write the actual Geolocation code:"]}]
+1c:T514,/* Call the function after the page is done loading. */
+window.onload = myLocation;
+
+function myLocation() {
+
+/* Check if the browser supports the Geolocation API. If it does, then 
+the geolocation property exists, and the condition evaluates to true. The 
+navigator.geolocation property is an object that contains the whole geolocation API */
+  if (navigator.geolocation){
+    /* Call the getCurrentPosition method and pass it a function, showLocation, which 
+    we shall soon implement. An API is basically an object with properties and methods. 
+    The Geolocation API has the getCurrentPosition method, which handles the job of getting 
+    the browser's location.*/ 
+    navigator.geolocation.getCurrentPosition(showLocation);
+  }
+  else {
+    // If there's no geolocation support, show an alert
+    alert("Sorry, your browser does not support geolocation."); 
+  }
+}
+
+/* This function is passed a position, containing latitude and longitude values */
+function showLocation(position){ 
+/* Get the latitude and longitude from the position.coords object */
+const latitude = position.coords.latitude;
+const longitude = position.coords.longitude;
+// Show the location on the page
+document.getElementById("location").innerHTML = 
+"You are at Latitude: " + latitude +  ", Longitude: " + longitude;
+}
+b:["$","$L1b",null,{"children":["$","code",null,{"className":"language-js","children":"$1c"}]}]
+c:["$","p",null,{"children":"When you run this code (or any other code using the Geolocation API) for the first time,\nthe browser requests to access your permission. This security check is for privacy reasons,\npreventing a malicious app from accessing your location without the user's permission."}]
+d:["$","p",null,{"children":"That's it. We're done with  getting the user's location."}]
+e:["$","h3",null,{"children":"A bit more about the getCurrentPostion() method"}]
+f:["$","p",null,{"children":["Although not shown in the previous code, the ",["$","code",null,{"children":"getCurrentPosition"}]," method can take three parameters.\nThe last two parameters are optional:"]}]
+10:["$","$L1b",null,{"children":["$","code",null,{"children":"getCurrentPosition(successHandler, errorHandler, options);\n"}]}]
+11:["$","ul",null,{"children":["\n",["$","li",null,{"children":[["$","code",null,{"children":"successHandler"}],": A function called if the browser successfully gets your location."]}],"\n",["$","li",null,{"children":[["$","code",null,{"children":"errorHandler"}],": A function called if the browser fails to determine your location."]}],"\n",["$","li",null,{"children":[["$","code",null,{"children":"options"}],": An object to customize the location retrieval. It supports:","\n",["$","ul",null,{"children":["\n",["$","li",null,{"children":[["$","code",null,{"children":"enableHighAccuracy"}],": Suggests the browser use the most accurate method possible (like GPS)."]}],"\n",["$","li",null,{"children":[["$","code",null,{"children":"timeout"}],": The maximum time (in milliseconds) the browser should wait to get a location."]}],"\n",["$","li",null,{"children":[["$","code",null,{"children":"maximumAge"}],": The maximum age (in milliseconds) of a cached location that is acceptable to return."]}],"\n"]}],"\n"]}],"\n"]}]
+12:["$","p",null,{"children":["In the previous example, we called the geolocation object's ",["$","code",null,{"children":"getCurrentPosition"}]," method with\na success handler (",["$","code",null,{"children":"showLocation"}],") function. When our success handler, ",["$","code",null,{"children":"showLocation"}],",\nis called, it is passed a ",["$","code",null,{"children":"position"}]," object containing a coordinates object holding the\nlongitude and latitude, as well as other information about the browser's location.\nThe ",["$","code",null,{"children":"position"}]," object has a ",["$","code",null,{"children":"coords"}]," property, which can be used to reference the\nlatitudes and longitudes."]}]
+13:["$","p",null,{"children":"It works like this:"}]
+14:["$","ol",null,{"children":["\n",["$","li",null,{"children":["First, the browser calls ",["$","code",null,{"children":"getCurrentPosition"}],", which triggers the geolocation API\nto ask the user for permission to access location."]}],"\n",["$","li",null,{"children":["If the user accepts, geolocation attempts to get the browser's location\n(via means such as GPS, triangulation, etc discussed earlier), and if successful, it calls\nthe success handler (",["$","code",null,{"children":"showLocation"}],", in the example), and passes it an object with the\ncoordinates."]}],"\n"]}]
+15:["$","hr",null,{}]
+16:["$","nav",null,{"className":"post-navigation","aria-label":"Post navigation","children":[["$","h3",null,{"children":" Read other posts"}],["$","ul",null,{"children":[["$","li",null,{"children":["$","$L4",null,{"href":"/blog/svg-advantages-disadvantages","children":["← ","Advantages and disadvantages of SVG"]}]}],["$","li",null,{"children":["$","$L4",null,{"href":"/blog/distance-two-locations","children":["How to calculate the distance between two locations using JavaScript"," →"]}]}]]}]]}]
+17:["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/69ef5a39cc4d8dfb.css","precedence":"next"}]
+18:["$","script","script-0",{"src":"/_next/static/chunks/cbec149b17a636bf.js","async":true}]
+19:["$","script","script-1",{"src":"/_next/static/chunks/ad06993566a63284.js","async":true}]
+1a:["$","$L1d",null,{"children":["$","$1e",null,{"name":"Next.MetadataOutlet","children":"$@1f"}]}]
+1f:null
