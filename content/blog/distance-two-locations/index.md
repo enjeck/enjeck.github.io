@@ -6,12 +6,13 @@ categories: ["html", "javascript"]
 
 The most popular way of calculating the distance between two points on a 
 sphere is using the Haversine equation. 
-If you have the coordinates (that is; longitude and latitude) of the the starting and 
-destination locations, you can use this equation to calculate it. 
-Here's how to do calculate the distance in kilometers between two locations using 
-JavaScript and the geolocation API. 
+If you have the coordinates (longitude and latitude) of the starting and 
+destination locations, you can use this equation to calculate the distance. 
 
-By default, coordinates (gotten using the Geolocation API) are given in degrees. 
+Here's how to calculate the distance in kilometers between two locations using 
+JavaScript and the Geolocation API. 
+
+By default, coordinates obtained from the Geolocation API are given in degrees. 
 We need them in radians for the formula. Here's our conversion function: 
 
 ```js
@@ -22,7 +23,7 @@ function degreesToRadians(degrees) {
 }
 ```
 
-Here's the function that does the distance calculation using coordinates (longitudes and latitudes).
+Here's the function to calculate the distance using coordinates (longitude and latitude):
 
 ```js
 // Function takes two objects, that contain coordinates to a starting and destination location.
@@ -39,12 +40,12 @@ function calcDistance (startingCoords, destinationCoords){
   let distanceInKilometers = Math.acos(Math.sin(startingLat) * Math.sin(destinationLat) +
   Math.cos(startingLat) * Math.cos(destinationLat) *
   Math.cos(startingLong - destinationLong)) * radius;
-}
+
   return distanceInKilometers;
 }
 ```
 
-Now, you can the call `calcDistance` function and pass it any two coordinates. 
+Now, you can call the `calcDistance` function and pass it any two coordinates. 
 For example:
 
 ```js

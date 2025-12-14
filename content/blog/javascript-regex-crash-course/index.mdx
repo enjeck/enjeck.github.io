@@ -19,8 +19,9 @@ let regExpres2 = /xyz/
 
 Both of the above regular expression objects represent a pattern of a character _x_ followed by a _b_ character followed by a _c_. 
 
-When creating a regular expression using the RegExp constructor, the pattern is written like a normal string. Here, backslashes can be used as usual.
-Whereas, regular expressions defined using the literal notation deal with backslashes differently. A forward slash denotes the start and the end of the pattern, so we have to place a backslash before any forward slash that we want to be part of the pattern. If a backslash is not part of a special character (such as `\n`, `\t`), it is _preserved_ instead of ignored (treated as a string) and will therefore change the meaning of the pattern. 
+When creating a regular expression using the `RegExp` constructor, the pattern is written as a normal string, so usual rules for backslashes apply.
+
+On the other hand, regular expressions defined using literal notation treat backslashes differently. Since a forward slash marks the start and end of the pattern, you must place a backslash before any forward slash you want to include in the pattern. If a backslash is not part of a special character (like `\n`), it is preserved in the regex pattern. 
 
 ### Handling special characters
 
@@ -79,14 +80,14 @@ For a range of characters indicated with a hyphen, the ordering of the character
 
 In regular expressions, character sets/groups have a built-in shorthand for writing them. Digits (`[0-9]`) can be represented as `\d`. Here are some common character sets and their shorthand codes:
 
-| Character  | Purpose|
-| ----------| ------------------------------------------------------ |
-| \d        | A digit character                                      |
-| \D  | A character that is not a digit |
-| \w  | An alphanumeric character (“word character”)| 
-| \W  | A nonalphanumeric character | 
-| \s  | Any whitespace character (space, tab, newline, and similar) |
-| \S  | Any character except for newline | 
+| Character | Purpose |
+| --- | --- |
+| `\d` | A digit character |
+| `\D` | A character that is not a digit |
+| `\w` | An alphanumeric character ("word character") |
+| `\W` | A non-alphanumeric character |
+| `\s` | Any whitespace character (space, tab, newline, etc.) |
+| `\S` | Any character except for whitespace | 
 
 If we want to match a phone number with format `XXX-XXX-XXXX`, here's how we can do it:
 
@@ -275,7 +276,7 @@ console.log("hahehahehe".replace(/a/g, "e"));
 // → hehehehehe
 ```
 
-The above behavior of replacing all matches in a string can be replicated using JavaScript's `replaceAll()` method without having to use regular expressions at all. The advantage of using regular expressions with the `replace()` method is that we can mention matched subexpression groups. For example, say we a string with two numbers `2 3` and we want to swap their positions to say `3 2` instead:
+The behavior of replacing all matches in a string can also be achieved using JavaScript's `replaceAll()` method without regular expressions. However, using regular expressions with `replace()` allows us to reference matched subexpression groups. For example, say we have a string "2 3" and we want to swap the numbers to "3 2":
 
 ```js
 console.log("2 3".replace(/(\w+) (\w+)/g, "$2 $1"));
@@ -288,8 +289,8 @@ Instead of a string, we may decide to pass a function as the second argument of 
 
 ```js
 let phrase = "unicef is a humanitarian ngo.";
-let re = phrase.replace(/\b(unicef|ngo)\b/g, word => word.toUpperCase())
-console.log(re);
+let result = phrase.replace(/\b(unicef|ngo)\b/g, word => word.toUpperCase())
+console.log(result);
 // → UNICEF is a humanitarian NGO.
 ```
 

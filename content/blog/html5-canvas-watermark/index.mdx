@@ -4,7 +4,7 @@ date: '2022-03-15'
 categories: ["JavaScript", "HTML"]
 ---
 
-HTML has come far from being just a markup language. The HTML5 canvas gives us the power to create and manipulate pixels, sort of like a painter working on a canvas. We can draw text and graphics onto the canvas using JavaScript. To demonstrate the power of the canvas and how to use its features, let's build an image watermarking tool that allows a user to upload an image and watermark it with text.   
+HTML5 canvas allows us to create and manipulate pixels, just like a painter working on a canvas. We can draw text and graphics onto the canvas using JavaScript. To demonstrate its power, let's build an image watermarking tool that allows a user to upload an image and watermark it with text.   
 
 ## Adding the canvas into a web page
 
@@ -57,18 +57,7 @@ Let's begin writing some JavaScript between our script tags:
 
 ```
 
-In the code above, we get the canvas element we had already created earlier. Before we can begin drawing on it, we must first set an interface by choosing a context. The context defines the set of properties and methods that can be used to draw on the canvas. Here, we are using a 2D context. As you might guess, the canvas supports other interfaces like 3d, which won't be covered in this tutorial.
- 
-Some older browsers (e.g < Internet Explorer 9) do not support the canvas API. When a feature isn't supported, it's a good practice to show something else to a user, instead of letting them encounter a blank page. To check if the canvas exists, we can use `canvas.getContext()`.  
-
-```js
-  const canvas = document.getElementById("canvas");
-  if (canvas.getContext) {
-    // actual code
-  } else {
-    alert("Sorry, your browser does not support the canvas API. Please, update. ")
-  }
-``` 
+In the code above, we get the canvas element we created. Before we can draw, we must set an interface by getting a context. The context defines the properties and methods used to draw on the canvas. Here, we use a 2D context. 
 
 Using JavaScript to check for canvas support might be a bit of an overkill, depending on what you are trying to do. JavaScript's power comes into play when you want to provide users with a different experience (such as displaying another content or redirecting to another page) when there's no canvas support. 
 
@@ -222,25 +211,25 @@ Add the following code into `watermark.js`:
 
 ```js
 // Select the "browse" button, used to choose the image
-var imageLoader = document.getElementById('imageLoader');
+const imageLoader = document.getElementById('imageLoader');
 
 /* When the user selects an image, call the loadImage function */
     imageLoader.addEventListener('change', loadImage, false);
 
 // Select the canvas and give it a 2d context 
-var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 
 ```
 
-The event listener calls the `loadImage()` function, which is defined below. It reads the selected image using the `FileReader`object and draws it onto the canvas using `drawImage()`. 
+The event listener calls the `loadImage()` function, which is defined below. It reads the selected image using the `FileReader` object and draws it onto the canvas using `drawImage()`. 
 
 ```js
 function loadImage(e){
     // Read the selected image 
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = function(event){
-        var img = new Image();
+        const img = new Image();
         img.onload = function(){
             /* Set the width and height of the canvas to
              match the size of the chosen image */
@@ -266,7 +255,7 @@ Next, let's enable the "preview" (`id="previewBtn"`) button by making it call a 
 ```js
 window.onload = function() {
     // Get the preview button element
-    var button = document.getElementById("previewBtn");
+    const button = document.getElementById("previewBtn");
     /* Add a click handler to the button so that
     the previewImage function is called when clicked */
     button.onclick = previewImage;
@@ -382,7 +371,9 @@ Let's take a closer look at `fillStyle`. It is a context property that holds the
 ctx.fillStyle = color;
 ```
 
-Notice that since the text background and text color are usually different values, we have to set it multiple times. You might expect us to set the rectangle color and text color using the `fillRect()` and `fillText()` methods respectively, but this is not how the canvas works. Recall that the canvas context is just an object that controls how the canvas is used. With `fillStyle`, we tell the canvas that the subsequently drawn object(s) should use the specified color. After setting fillStyle, anything that can be filled with color (`fillRect()`, `fillText()`) will take on the last-specified `fillStyle` color. This color will be used until it is changed again via `fillStyle` to another color. 
+Notice that since the text background and text color are usually different values, we have to set `fillStyle` multiple times. You might expect us to set the rectangle color and text color using the `fillRect()` and `fillText()` methods respectively, but that is not how the canvas works. 
+
+The canvas context is an object that maintains a state. With `fillStyle`, we update this state, telling the canvas that any subsequent shapes should use this color. This color persists until `fillStyle` is updated again. 
 
 ### Downloading an image from the canvas
 

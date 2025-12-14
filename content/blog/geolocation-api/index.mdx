@@ -1,5 +1,5 @@
 ---
-title: How to get a someone's location using the Geolocation API
+title: How to get a user's location using the Geolocation API
 date: '2021-09-25'
 categories: ["html", "javascript"]
 ---
@@ -11,7 +11,7 @@ power a particular feature.
 
 Whenever you want to build web pages that are location-aware, 
 JavaScript's Geolocation API is great tool. If the user permits 
-(the user give the browser permission to access their location), you can pinpoint 
+(the user gives the browser permission to access their location), you can pinpoint 
 their city, or even more precisely, the street they live in.
 
 Don't confuse the Geolocation API with Google Maps. 
@@ -29,10 +29,11 @@ Earth, and longitude eastern/western. Every place on Earth has a longitude/latit
 corresponding to its position on planet Earth. For example, New York City is somewhere around 
 latitude 40 and longitude -70.
 
+
 Not only smartphones are location-aware. 
-Nowadays, almost every eleectronic device can be made location-aware, even a desktop computer. 
+Nowadays, almost every electronic device can be made location-aware, even a desktop computer. 
 You may be wondering how a browser running on a desktop computer can determine its location 
-when it doesn't have a GPS. Browsers have other ways of  finding location without the use of 
+when it doesn't have a GPS. Browsers use other methods to find your location without the use of 
 location technologies like GPS.
 
 - **GPS (Global Positioning System)**: Mainly used by modern mobile devices, it can provide
@@ -98,7 +99,7 @@ navigator.geolocation property is an object that contains the whole geolocation 
 function showLocation(position){ 
 /* Get the latitude and longitude from the position.coords object */
 const latitude = position.coords.latitude;
-const.longitude = position.coords.longitude;
+const longitude = position.coords.longitude;
 // Show the location on the page
 document.getElementById("location").innerHTML = 
 "You are at Latitude: " + latitude +  ", Longitude: " + longitude;
@@ -113,29 +114,29 @@ That's it. We're done with  getting the user's location.
 
 ### A bit more about the getCurrentPostion() method
 
-Although not shown in the previous code, the `getCurrentPostion` method can take three parameters. 
+Although not shown in the previous code, the `getCurrentPosition` method can take three parameters. 
 The last two parameters are optional:
 
 ```
 getCurrentPosition(successHandler, errorHandler, options);
 ```
 
-- The `successHandler` function is called if the browser successfully gets your location. 
-- `errorHandler` isIt accepts parameters `enableHighAccuracy`, `timeout` (the maximum time the browser can 
-take to determine its location), `maximumAge` (the oldest age a location value can reach, after 
-which, the browser needs always recalculate the location 
-whenever getCurrentPostion is called. called if the browser can't determine your location. 
-- The `options` parameter is used for controlling how the geolocation computes its value.  
+- `successHandler`: A function called if the browser successfully gets your location.
+- `errorHandler`: A function called if the browser fails to determine your location.
+- `options`: An object to customize the location retrieval. It supports:
+  - `enableHighAccuracy`: Suggests the browser use the most accurate method possible (like GPS).
+  - `timeout`: The maximum time (in milliseconds) the browser should wait to get a location.
+  - `maximumAge`: The maximum age (in milliseconds) of a cached location that is acceptable to return.  
 
 In the previous example, we called the geolocation object's `getCurrentPosition` method with 
-an a success handler (`showLocation`) function. When our success handler, `showLocation`, 
+a success handler (`showLocation`) function. When our success handler, `showLocation`, 
 is called, it is passed a `position` object containing a coordinates object holding the 
 longitude and latitude, as well as other information about the browser's location. 
 The `position` object has a `coords` property, which can be used to reference the 
 latitudes and longitudes. 
 
 It works like this: 
-1. First, the browser call `getCurrentPostion`, which triggers the geolocation API 
+1. First, the browser calls `getCurrentPosition`, which triggers the geolocation API 
 to ask the user for permission to access location. 
 2. If the user accepts, geolocation attempts to get the browser's location 
 (via means such as GPS, triangulation, etc discussed earlier), and if successful, it calls 

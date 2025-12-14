@@ -114,7 +114,7 @@ export default function HomePageClient({ posts }) {
                   {' '}
                   <span aria-hidden="true">:)</span> <span className="hello"> Hello!</span>
                   {' '} Nice to meet you. I'm <span className="my-name">Enjeck</span>, a{' '}
-                  <span className="dev"> fullstack developer</span> and
+                  <span className="dev"> software engineer</span> and
                   <span className="write"> technical writer</span> with UI/UX{' '}
                   <span className="design">design</span> skills.
                 </h1>
