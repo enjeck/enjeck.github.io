@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "deploy": "next build && touch out/.nojekyll && echo 'enjeck.github.io' > out/CNAME && gh-pages -d out -b main",
+    "deploy": "next build && touch out/.nojekyll && echo 'enjeck.com' > out/CNAME && gh-pages -d out -b main -t",
     "lint": "next lint"
   },
   "dependencies": {
