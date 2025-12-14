@@ -17,7 +17,9 @@ export default function BlogPreview({ posts }) {
                   return <span key={category} className="category">{category}</span>
                 })}
               </div>
-              <small className="date">{post.frontmatter.date}</small>
+              <div className="post-meta">
+                <small className="date">{post.frontmatter.date}</small>
+              </div>
               <h3>
                 <Link style={{ boxShadow: 'none' }} href={`/blog/${post.slug}`}>
                   {title}

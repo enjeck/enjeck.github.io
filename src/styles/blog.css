@@ -139,7 +139,7 @@
 }
 
 .blog-item:nth-of-type(2n) .category {
-  background-color:var(--color2);
+  background-color: var(--color2);
 }
 
 .blog-item:nth-of-type(3n) .category {
@@ -186,6 +186,7 @@
   color: #000;
   color: #007acc;
 }
+
 .blog-body a:hover {
   color: #007acc;
 }
@@ -209,6 +210,7 @@
   margin-top: 5vh;
   color: var(--dark-black);
 }
+
 .centered {
   text-align: center;
 }
@@ -244,6 +246,18 @@ code {
 
 .blog-main .page-heading {
   top: 7%;
+}
+
+.post-navigation ul li {
+  margin-top: 1rem;
+}
+
+.post-navigation ul li:nth-child(2) {
+  text-align: right;
+}
+
+.post-navigation h3 {
+  margin-top: 2rem;
 }
 
 /* Math Latex */
